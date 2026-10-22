@@ -285,8 +285,8 @@
     <h1>Banana Studio</h1>
     <p>Générez des images avec Google Nano Banana — gratuit et illimité via Pollinations, ou haute qualité via Puter</p>
     <div class="auth-features">
-      <div class="auth-feature"><span class="dot" style="background:var(--banana)"></span>Mode Gratuit Illimité (Pollinations, sans clé)</div>
-      <div class="auth-feature"><span class="dot" style="background:var(--success)"></span>Mode Puter pour qualité 4K (crédits gratuits mensuels)</div>
+      <div class="auth-feature"><span class="dot" style="background:var(--banana)"></span>Mode Gratuit Illimité : FLUX via Pollinations (sans clé)</div>
+      <div class="auth-feature"><span class="dot" style="background:var(--success)"></span>Mode Puter pour Nano Banana + qualité 4K</div>
       <div class="auth-feature"><span class="dot" style="background:var(--info)"></span>Historique sauvegardé dans votre cloud Puter</div>
       <div class="auth-feature"><span class="dot" style="background:var(--accent)"></span>Aucune clé API, aucune carte bancaire</div>
     </div>
@@ -356,17 +356,15 @@
           <label for="model">Modèle</label>
           <select id="model">
             <!-- Pollinations models (free) -->
-            <option value="pollinations:nanobanana">Nano Banana (gratuit, recommandé)</option>
-            <option value="pollinations:flux">FLUX Schnell (gratuit, rapide)</option>
-            <option value="pollinations:kontext">Kontext (gratuit)</option>
-            <option value="pollinations:seedream">Seedream (gratuit)</option>
+            <option value="pollinations:flux">FLUX Schnell (GRATUIT, illimité, recommandé)</option>
             <!-- Puter models (credits) -->
             <option value="puter:gemini-nano-banana-2.1">[Puter] Nano Banana 2.1 (Gemini)</option>
             <option value="puter:gemini-3.1-flash-image">[Puter] Gemini 3.1 Flash Image</option>
-            <option value="puter:gemini-3-pro-image">[Puter] Gemini 3 Pro Image</option>
+            <option value="puter:gemini-3-pro-image">[Puter] Gemini 3 Pro Image (4K)</option>
             <option value="puter:gpt-image-2">[Puter] GPT Image 2 (OpenAI)</option>
             <option value="puter:black-forest-labs/flux-schnell">[Puter] FLUX Schnell (Replicate)</option>
           </select>
+          <div class="field-hint" id="model-hint">FLUX Schnell est rapide et gratuit. Pour Nano Banana, utilisez le mode Puter (crédits gratuits).</div>
         </div>
 
         <div class="field" id="quality-field">
@@ -576,17 +574,19 @@ function setEngine(engine) {
   const qualityField = document.getElementById('quality-field');
 
   if (engine === 'pollinations') {
-    hint.textContent = 'Pollinations.ai — anonyme, sans clé, Nano Banana inclus. ~1 image / 15 sec.';
+    hint.textContent = 'Pollinations.ai — anonyme, sans clé, FLUX illimité. ~1 image / 15 sec.';
     banner.style.display = 'flex';
-    banner.innerHTML = '<span class="icon">✓</span><div><strong>Mode Gratuit Illimité activé.</strong> Aucun crédit consommé. Limite : ~1 image / 15 sec (anonyme).</div>';
+    banner.style.borderColor = 'rgba(45, 212, 167, 0.3)';
+    banner.style.background = 'linear-gradient(135deg, rgba(45, 212, 167, 0.10), rgba(90, 176, 255, 0.08))';
+    banner.innerHTML = '<span class="icon">✓</span><div><strong>Mode Gratuit Illimité activé.</strong> FLUX Schnell via Pollinations, anonyme, sans clé. Aucun crédit consommé.</div>';
     // Filter model options to pollinations
     Array.from(modelSelect.options).forEach(opt => {
       opt.style.display = opt.value.startsWith('pollinations:') ? '' : 'none';
     });
-    modelSelect.value = 'pollinations:nanobanana';
+    modelSelect.value = 'pollinations:flux';
     qualityField.style.display = 'none';
   } else {
-    hint.textContent = 'Puter.js — utilise vos crédits mensuels gratuits. Qualité jusqu\'à 4K.';
+    hint.textContent = 'Puter.js — utilise vos crédits mensuels gratuits. Nano Banana + qualité jusqu\'à 4K.';
     banner.style.display = 'flex';
     banner.style.borderColor = 'rgba(245, 185, 66, 0.3)';
     banner.style.background = 'linear-gradient(135deg, rgba(245, 185, 66, 0.10), rgba(217, 154, 42, 0.08))';
@@ -600,16 +600,16 @@ function setEngine(engine) {
 }
 
 /* ---------- Pollinations generation (FREE, UNLIMITED) ---------- */
+/* Pollinations.ai free tier:
+   - Legacy endpoint image.pollinations.ai/prompt/{prompt} — anonymous, no key, FLUX only, unlimited
+   - New endpoint gen.pollinations.ai/image/{prompt} — requires API key for most models
+   - We use the legacy endpoint with model=flux which is ALWAYS FREE per their docs.
+*/
 async function generatePollinations(prompt, modelKey, ratio) {
-  // Pollinations image URL format (free, no auth)
-  // https://image.pollinations.ai/prompt/{encoded}?width=W&height=H&model=M&nologo=true
-  const modelMap = {
-    'pollinations:nanobanana': 'nanobanana',
-    'pollinations:flux': 'flux',
-    'pollinations:kontext': 'kontext',
-    'pollinations:seedream': 'seedream'
-  };
-  const model = modelMap[modelKey] || 'flux';
+  // Only FLUX is reliably free on the anonymous endpoint.
+  // Other models (nanobanana, kontext, seedream) may require auth on the new endpoint.
+  // We force model=flux for the free anonymous route.
+  const model = 'flux';
 
   // Compute pixel dimensions from ratio (~1024 base)
   const baseSize = 1024;
@@ -624,14 +624,35 @@ async function generatePollinations(prompt, modelKey, ratio) {
   }
 
   const encoded = encodeURIComponent(prompt);
-  const url = `https://image.pollinations.ai/prompt/${encoded}?width=${w}&height=${h}&model=${model}&nologo=true&seed=${Math.floor(Math.random() * 1000000)}`;
+  const seed = Math.floor(Math.random() * 1000000);
+  // Use the legacy endpoint which is free and anonymous for FLUX
+  const url = `https://image.pollinations.ai/prompt/${encoded}?width=${w}&height=${h}&model=${model}&nologo=true&seed=${seed}`;
 
   // Preload the image to detect errors
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.onload = () => resolve(url);
-    img.onerror = () => reject(new Error('Pollinations n\'a pas pu générer l\'image. Réessayez dans ~15 secondes (limite anonyme).'));
+    let settled = false;
+    const timeout = setTimeout(() => {
+      if (!settled) {
+        settled = true;
+        reject(new Error('Délai dépassé. Pollinations est peut-être surchargé — réessayez dans 15-30 sec.'));
+      }
+    }, 60000);
+    img.onload = () => {
+      if (!settled) {
+        settled = true;
+        clearTimeout(timeout);
+        resolve(url);
+      }
+    };
+    img.onerror = () => {
+      if (!settled) {
+        settled = true;
+        clearTimeout(timeout);
+        reject(new Error('Pollinations n\'a pas pu générer l\'image. Réessayez dans ~15 secondes (limite anonyme : 1 req/15 sec).'));
+      }
+    };
     img.src = url;
   });
 }
