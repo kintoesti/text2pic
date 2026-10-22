@@ -285,7 +285,7 @@
     <h1>Banana Studio</h1>
     <p>Générez des images avec Google Nano Banana — gratuit et illimité via Pollinations, ou haute qualité via Puter</p>
     <div class="auth-features">
-      <div class="auth-feature"><span class="dot" style="background:var(--banana)"></span>Mode Gratuit Illimité : FLUX via Pollinations (sans clé)</div>
+      <div class="auth-feature"><span class="dot" style="background:var(--banana)"></span>Mode Gratuit Illimité : FLUX via Pollinations (1 img / 45s)</div>
       <div class="auth-feature"><span class="dot" style="background:var(--success)"></span>Mode Puter pour Nano Banana + qualité 4K</div>
       <div class="auth-feature"><span class="dot" style="background:var(--info)"></span>Historique sauvegardé dans votre cloud Puter</div>
       <div class="auth-feature"><span class="dot" style="background:var(--accent)"></span>Aucune clé API, aucune carte bancaire</div>
@@ -574,17 +574,18 @@ function setEngine(engine) {
   const qualityField = document.getElementById('quality-field');
 
   if (engine === 'pollinations') {
-    hint.textContent = 'Pollinations.ai — anonyme, sans clé, FLUX illimité. ~1 image / 15 sec.';
+    hint.textContent = 'Pollinations.ai — anonyme, sans clé, FLUX illimité. 1 image / 45 sec.';
     banner.style.display = 'flex';
     banner.style.borderColor = 'rgba(45, 212, 167, 0.3)';
     banner.style.background = 'linear-gradient(135deg, rgba(45, 212, 167, 0.10), rgba(90, 176, 255, 0.08))';
-    banner.innerHTML = '<span class="icon">✓</span><div><strong>Mode Gratuit Illimité activé.</strong> FLUX Schnell via Pollinations, anonyme, sans clé. Aucun crédit consommé.</div>';
+    banner.innerHTML = '<span class="icon">✓</span><div><strong>Mode Gratuit Illimité activé.</strong> FLUX Schnell via Pollinations, anonyme, sans clé. Limite : 1 image / 45 sec / IP.</div>';
     // Filter model options to pollinations
     Array.from(modelSelect.options).forEach(opt => {
       opt.style.display = opt.value.startsWith('pollinations:') ? '' : 'none';
     });
     modelSelect.value = 'pollinations:flux';
     qualityField.style.display = 'none';
+    updateCooldownUI();
   } else {
     hint.textContent = 'Puter.js — utilise vos crédits mensuels gratuits. Nano Banana + qualité jusqu\'à 4K.';
     banner.style.display = 'flex';
@@ -596,20 +597,53 @@ function setEngine(engine) {
     });
     modelSelect.value = 'puter:gemini-nano-banana-2.1';
     qualityField.style.display = '';
+    updateCooldownUI();
   }
 }
 
 /* ---------- Pollinations generation (FREE, UNLIMITED) ---------- */
-/* Pollinations.ai free tier:
-   - Legacy endpoint image.pollinations.ai/prompt/{prompt} — anonymous, no key, FLUX only, unlimited
-   - New endpoint gen.pollinations.ai/image/{prompt} — requires API key for most models
-   - We use the legacy endpoint with model=flux which is ALWAYS FREE per their docs.
+/* Pollinations.ai free tier (anonymous, no key):
+   - Endpoint: image.pollinations.ai/prompt/{prompt}
+   - Model: flux (always free)
+   - Rate limit: 1 image / 45 sec / IP
+   - All aspect ratios supported
+   - We track last generation time to show a countdown to the user.
 */
+let lastPollinationsGen = 0;
+const POLLINATIONS_COOLDOWN_MS = 46000; // 46 sec to be safe (45 + buffer)
+
+function getPollinationsCooldownRemaining() {
+  if (lastPollinationsGen === 0) return 0;
+  const elapsed = Date.now() - lastPollinationsGen;
+  return Math.max(0, POLLINATIONS_COOLDOWN_MS - elapsed);
+}
+
+function updateCooldownUI() {
+  const btn = document.getElementById('generate-btn');
+  const isPollinations = document.getElementById('model').value.startsWith('pollinations:');
+  if (!isPollinations) {
+    btn.disabled = false;
+    btn.querySelector('span, svg').nextSibling.textContent = ' Générer l\'image';
+    return;
+  }
+  const remaining = getPollinationsCooldownRemaining();
+  if (remaining > 0) {
+    const sec = Math.ceil(remaining / 1000);
+    btn.disabled = true;
+    btn.querySelector('svg').nextSibling.textContent = ' Attendez ' + sec + 's...';
+    setTimeout(updateCooldownUI, 1000);
+  } else {
+    btn.disabled = false;
+    btn.querySelector('svg').nextSibling.textContent = ' Générer l\'image';
+  }
+}
+
 async function generatePollinations(prompt, modelKey, ratio) {
-  // Only FLUX is reliably free on the anonymous endpoint.
-  // Other models (nanobanana, kontext, seedream) may require auth on the new endpoint.
-  // We force model=flux for the free anonymous route.
-  const model = 'flux';
+  // Check cooldown
+  const remaining = getPollinationsCooldownRemaining();
+  if (remaining > 0) {
+    throw new Error('Limite gratuite : 1 image / 45 sec. Réessayez dans ' + Math.ceil(remaining / 1000) + ' sec, ou passez en mode Puter.');
+  }
 
   // Compute pixel dimensions from ratio (~1024 base)
   const baseSize = 1024;
@@ -625,8 +659,7 @@ async function generatePollinations(prompt, modelKey, ratio) {
 
   const encoded = encodeURIComponent(prompt);
   const seed = Math.floor(Math.random() * 1000000);
-  // Use the legacy endpoint which is free and anonymous for FLUX
-  const url = `https://image.pollinations.ai/prompt/${encoded}?width=${w}&height=${h}&model=${model}&nologo=true&seed=${seed}`;
+  const url = `https://image.pollinations.ai/prompt/${encoded}?width=${w}&height=${h}&model=flux&nologo=true&seed=${seed}`;
 
   // Preload the image to detect errors
   return new Promise((resolve, reject) => {
@@ -636,13 +669,14 @@ async function generatePollinations(prompt, modelKey, ratio) {
     const timeout = setTimeout(() => {
       if (!settled) {
         settled = true;
-        reject(new Error('Délai dépassé. Pollinations est peut-être surchargé — réessayez dans 15-30 sec.'));
+        reject(new Error('Délai dépassé (60s). Réessayez.'));
       }
     }, 60000);
     img.onload = () => {
       if (!settled) {
         settled = true;
         clearTimeout(timeout);
+        lastPollinationsGen = Date.now();
         resolve(url);
       }
     };
@@ -650,7 +684,7 @@ async function generatePollinations(prompt, modelKey, ratio) {
       if (!settled) {
         settled = true;
         clearTimeout(timeout);
-        reject(new Error('Pollinations n\'a pas pu générer l\'image. Réessayez dans ~15 secondes (limite anonyme : 1 req/15 sec).'));
+        reject(new Error('Pollinations a refusé la requête. Cause probable : limite de 1 image / 45 sec / IP. Attendez 45 sec puis réessayez.'));
       }
     };
     img.src = url;
@@ -748,9 +782,12 @@ async function generate() {
     }
 
     overlay.classList.remove('active');
-    toast(isPollinations ? 'Image générée gratuitement !' : 'Image générée !', 'success');
+    toast(isPollinations ? 'Image générée gratuitement ! Prochaine dans 45 sec.' : 'Image générée !', 'success');
 
-    if (!isPollinations) {
+    if (isPollinations) {
+      // Start cooldown countdown
+      setTimeout(updateCooldownUI, 100);
+    } else {
       // Refresh credits after a Puter generation
       setTimeout(refreshCredits, 1500);
     }
