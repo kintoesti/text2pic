@@ -377,6 +377,15 @@
         </div>
 
         <div class="field">
+          <label for="pollinations-key">sk_jKpZ0p6Bgijgc4tl52fdwkJgnEP5dvXD</label>
+          <input type="text" id="pollinations-key" placeholder="pk_... (gratuit sur enter.pollinations.ai)" />
+          <div class="field-hint">
+            Sans clé : 1 image / 45 sec. Avec une clé gratuite : limites levées.
+            <a href="https://enter.pollinations.ai" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">Obtenir une clé gratuite →</a>
+          </div>
+        </div>
+
+        <div class="field">
           <label>Format</label>
           <div class="ratio-grid">
             <button class="ratio-btn active" data-ratio="1:1" data-w="1" data-h="1">1:1</button>
@@ -659,7 +668,14 @@ async function generatePollinations(prompt, modelKey, ratio) {
 
   const encoded = encodeURIComponent(prompt);
   const seed = Math.floor(Math.random() * 1000000);
-  const url = `https://image.pollinations.ai/prompt/${encoded}?width=${w}&height=${h}&model=flux&nologo=true&seed=${seed}`;
+  const cacheBuster = Date.now();
+  // Add referrer to identify the app + cache buster to avoid stale cached images
+  let url = `https://image.pollinations.ai/prompt/${encoded}?width=${w}&height=${h}&model=flux&nologo=true&seed=${seed}&referrer=banana-studio&_t=${cacheBuster}`;
+  // If user provided a Pollinations API key, append it (lifts rate limits)
+  const apiKey = (document.getElementById('pollinations-key')?.value || '').trim();
+  if (apiKey) {
+    url += `&token=${encodeURIComponent(apiKey)}`;
+  }
 
   // Preload the image to detect errors
   return new Promise((resolve, reject) => {
@@ -684,7 +700,21 @@ async function generatePollinations(prompt, modelKey, ratio) {
       if (!settled) {
         settled = true;
         clearTimeout(timeout);
-        reject(new Error('Pollinations a refusé la requête. Cause probable : limite de 1 image / 45 sec / IP. Attendez 45 sec puis réessayez.'));
+        // Try to fetch the actual error to give a better message
+        fetch(url).then(r => {
+          if (!r.ok) return r.json().then(j => {
+            const isRateLimit = j?.error?.code === 'FREE_LIMIT' || r.status === 402;
+            if (isRateLimit) {
+              reject(new Error('Limite gratuite atteinte (1 image / 45 sec / IP). Solution : ajoutez une clé API Pollinations gratuite dans le champ ci-dessous pour lever la limite, ou attendez 45 sec.'));
+            } else {
+              reject(new Error('Erreur Pollinations (' + r.status + '). Réessayez.'));
+            }
+          }).catch(() => {
+            reject(new Error('Pollinations a refusé la requête. Attendez 45 sec ou ajoutez une clé API gratuite.'));
+          });
+        }).catch(() => {
+          reject(new Error('Pollinations injoignable. Vérifiez votre connexion.'));
+        });
       }
     };
     img.src = url;
@@ -794,6 +824,12 @@ async function generate() {
   } catch (e) {
     console.error('Generation failed:', e);
     overlay.classList.remove('active');
+    // CRITICAL: clear the previous image so user doesn't see a stale cached image
+    const staleImg = document.querySelector('.result-image');
+    if (staleImg) staleImg.remove();
+    currentImageSrc = null;
+    document.getElementById('result-actions').style.display = 'none';
+    document.getElementById('result-prompt').style.display = 'none';
     document.getElementById('result-placeholder').style.display = 'block';
     let msg = 'Échec de la génération';
     if (e && e.code === 'insufficient_funds') {
@@ -803,9 +839,13 @@ async function generate() {
     } else if (e && e.message) {
       msg = e.message;
     }
-    toast(msg, 'error', 5000);
+    toast(msg, 'error', 6000);
   } finally {
     btn.disabled = false;
+    // Re-check cooldown state to update button text
+    if (document.getElementById('model').value.startsWith('pollinations:')) {
+      setTimeout(updateCooldownUI, 100);
+    }
   }
 }
 
