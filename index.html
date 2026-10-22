@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Tasker — A Puter.js To-Do App</title>
+<title>Banana Studio — Générateur d'images Nano Banana via Puter.js</title>
 <script src="https://js.puter.com/v2/"></script>
 <style>
   :root {
@@ -15,29 +15,20 @@
     --text: #e8eaf0;
     --text-dim: #9aa3b2;
     --text-faint: #6b7384;
-    --accent: #7c5cff;
-    --accent-soft: #5a3fd0;
-    --accent-glow: rgba(124, 92, 255, 0.35);
+    --accent: #f5b942;
+    --accent-soft: #d99a2a;
+    --accent-glow: rgba(245, 185, 66, 0.35);
+    --banana: #ffd54f;
     --success: #2dd4a7;
-    --success-soft: rgba(45, 212, 167, 0.15);
     --danger: #ff5c7a;
-    --danger-soft: rgba(255, 92, 122, 0.15);
-    --warning: #ffb547;
-    --warning-soft: rgba(255, 181, 71, 0.15);
     --info: #5ab0ff;
-    --info-soft: rgba(90, 176, 255, 0.15);
     --shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     --radius: 14px;
     --radius-sm: 9px;
     --radius-lg: 20px;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html, body {
-    height: 100%;
-  }
-
+  html, body { height: 100%; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     background: var(--bg);
@@ -45,539 +36,242 @@
     min-height: 100vh;
     line-height: 1.5;
     background-image:
-      radial-gradient(circle at 15% 10%, rgba(124, 92, 255, 0.12), transparent 45%),
+      radial-gradient(circle at 15% 10%, rgba(245, 185, 66, 0.10), transparent 45%),
       radial-gradient(circle at 85% 90%, rgba(45, 212, 167, 0.08), transparent 45%);
     background-attachment: fixed;
   }
 
-  /* ---------- Auth screen ---------- */
-  #auth-screen {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-  }
+  /* ---------- Auth ---------- */
+  #auth-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
   .auth-card {
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     padding: 48px 40px;
-    max-width: 440px;
+    max-width: 460px;
     width: 100%;
     text-align: center;
     box-shadow: var(--shadow);
   }
   .auth-logo {
-    width: 72px;
-    height: 72px;
+    width: 76px; height: 76px;
     margin: 0 auto 24px;
     border-radius: 18px;
-    background: linear-gradient(135deg, var(--accent), var(--success));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 36px;
+    background: linear-gradient(135deg, var(--banana), var(--accent-soft));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
     box-shadow: 0 8px 24px var(--accent-glow);
   }
-  .auth-card h1 {
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    margin-bottom: 8px;
-  }
-  .auth-card p {
-    color: var(--text-dim);
-    margin-bottom: 28px;
-    font-size: 15px;
-  }
-  .auth-features {
-    text-align: left;
-    margin-bottom: 28px;
-    display: grid;
-    gap: 10px;
-  }
+  .auth-card h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .auth-card p { color: var(--text-dim); margin-bottom: 28px; font-size: 15px; }
+  .auth-features { text-align: left; margin-bottom: 28px; display: grid; gap: 10px; }
   .auth-feature {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    background: var(--bg-soft);
-    border-radius: var(--radius-sm);
-    font-size: 14px;
-    color: var(--text-dim);
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; background: var(--bg-soft);
+    border-radius: var(--radius-sm); font-size: 14px; color: var(--text-dim);
   }
-  .auth-feature .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
+  .auth-feature .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
 
   /* ---------- Buttons ---------- */
   .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 11px 20px;
-    border-radius: var(--radius-sm);
-    border: none;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.18s ease;
-    font-family: inherit;
-    white-space: nowrap;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 11px 20px; border-radius: var(--radius-sm); border: none;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    transition: all 0.18s ease; font-family: inherit; white-space: nowrap;
   }
   .btn-primary {
-    background: linear-gradient(135deg, var(--accent), var(--accent-soft));
-    color: white;
+    background: linear-gradient(135deg, var(--banana), var(--accent-soft));
+    color: #2a1d00;
     box-shadow: 0 4px 14px var(--accent-glow);
   }
-  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px var(--accent-glow); }
-  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
-  .btn-ghost {
-    background: transparent;
-    color: var(--text-dim);
-    border: 1px solid var(--border);
-  }
+  .btn-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px var(--accent-glow); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+  .btn-ghost { background: transparent; color: var(--text-dim); border: 1px solid var(--border); }
   .btn-ghost:hover { background: var(--card-hover); color: var(--text); }
-  .btn-danger {
-    background: var(--danger-soft);
-    color: var(--danger);
-  }
-  .btn-danger:hover { background: rgba(255, 92, 122, 0.25); }
   .btn-block { width: 100%; }
   .btn-sm { padding: 7px 12px; font-size: 13px; }
 
-  /* ---------- App layout ---------- */
+  /* ---------- App ---------- */
   #app { display: none; min-height: 100vh; }
   #app.active { display: block; }
-
   header.app-header {
     background: rgba(23, 26, 35, 0.85);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
-    position: sticky;
-    top: 0;
-    z-index: 50;
+    position: sticky; top: 0; z-index: 50;
   }
   .header-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
+    max-width: 1200px; margin: 0 auto; padding: 14px 24px;
+    display: flex; align-items: center; gap: 16px;
   }
-  .brand {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-weight: 700;
-    font-size: 18px;
-    letter-spacing: -0.01em;
-  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; letter-spacing: -0.01em; }
   .brand-logo {
-    width: 32px; height: 32px;
-    border-radius: 9px;
-    background: linear-gradient(135deg, var(--accent), var(--success));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 17px;
+    width: 32px; height: 32px; border-radius: 9px;
+    background: linear-gradient(135deg, var(--banana), var(--accent-soft));
+    display: flex; align-items: center; justify-content: center; font-size: 17px;
   }
   .header-spacer { flex: 1; }
   .user-chip {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 6px 6px 6px 14px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 100px;
-    font-size: 13px;
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 6px 6px 14px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 100px; font-size: 13px;
   }
-  .user-chip img {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
+  .user-chip img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
   .user-chip .name { font-weight: 600; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  main {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 32px 24px 80px;
-  }
+  main { max-width: 1200px; margin: 0 auto; padding: 28px 24px 80px; }
 
-  /* ---------- Stats ---------- */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-    margin-bottom: 28px;
-  }
-  .stat {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px;
-  }
-  .stat-label {
-    font-size: 12px;
-    color: var(--text-faint);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-bottom: 8px;
-  }
-  .stat-value {
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-  .stat-value.accent { color: var(--accent); }
-  .stat-value.success { color: var(--success); }
-  .stat-value.warning { color: var(--warning); }
-  .stat-value.info { color: var(--info); }
+  .layout { display: grid; grid-template-columns: 380px 1fr; gap: 24px; align-items: start; }
 
-  /* ---------- Composer ---------- */
-  .composer {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px;
-    margin-bottom: 24px;
+  /* ---------- Composer panel ---------- */
+  .panel {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px;
   }
-  .composer-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 12px;
+  .panel h2 { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; }
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+  .field textarea, .field input[type="text"], .field select {
+    width: 100%; background: var(--bg-soft); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); padding: 11px 13px; color: var(--text);
+    font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.15s;
   }
-  .composer-row:last-child { margin-bottom: 0; }
-  .composer input[type="text"] {
-    flex: 1;
-    background: var(--bg-soft);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px 14px;
-    color: var(--text);
-    font-size: 15px;
-    font-family: inherit;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .composer input[type="text"]:focus { border-color: var(--accent); }
-  .composer select,
-  .composer input[type="date"] {
-    background: var(--bg-soft);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px 12px;
-    color: var(--text);
-    font-size: 14px;
-    font-family: inherit;
-    outline: none;
-    cursor: pointer;
-  }
-  .composer-meta {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .composer-meta select,
-  .composer-meta input[type="date"] { flex: 1; min-width: 130px; }
+  .field textarea { resize: vertical; min-height: 90px; }
+  .field textarea:focus, .field input:focus, .field select:focus { border-color: var(--accent); }
+  .field select { cursor: pointer; }
+  .field-hint { font-size: 12px; color: var(--text-faint); margin-top: 5px; }
 
-  /* ---------- Toolbar ---------- */
-  .toolbar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 16px;
-    flex-wrap: wrap;
-  }
-  .filter-group {
-    display: flex;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 3px;
-    gap: 2px;
-  }
-  .filter-btn {
-    padding: 7px 14px;
-    background: transparent;
-    border: none;
-    color: var(--text-dim);
-    font-size: 13px;
-    font-weight: 500;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.15s;
-    font-family: inherit;
-  }
-  .filter-btn:hover { color: var(--text); }
-  .filter-btn.active {
-    background: var(--accent);
-    color: white;
-  }
-  .toolbar-spacer { flex: 1; }
-  .search-input {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 8px 14px;
-    color: var(--text);
-    font-size: 13px;
-    font-family: inherit;
-    outline: none;
-    min-width: 180px;
-  }
-  .search-input:focus { border-color: var(--accent); }
-
-  /* ---------- Todo list ---------- */
-  .todo-list { display: grid; gap: 10px; }
-  .todo {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 18px;
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    transition: all 0.18s ease;
-    animation: slideIn 0.25s ease;
-  }
-  .todo:hover { background: var(--card-hover); border-color: #38415a; }
-  .todo.completed { opacity: 0.55; }
-  .todo.completed .todo-title { text-decoration: line-through; color: var(--text-faint); }
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(-6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .checkbox {
-    width: 22px;
-    height: 22px;
-    border: 2px solid var(--border);
-    border-radius: 7px;
-    cursor: pointer;
-    flex-shrink: 0;
-    margin-top: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-    background: var(--bg-soft);
-  }
-  .checkbox:hover { border-color: var(--accent); }
-  .checkbox.checked {
-    background: var(--success);
-    border-color: var(--success);
-  }
-  .checkbox.checked svg { display: block; }
-  .checkbox svg { display: none; width: 14px; height: 14px; }
-
-  .todo-body { flex: 1; min-width: 0; }
-  .todo-title {
-    font-size: 15px;
-    font-weight: 500;
-    word-break: break-word;
-    margin-bottom: 6px;
-  }
-  .todo-title.editing {
-    background: var(--bg-soft);
-    border: 1px solid var(--accent);
-    border-radius: 6px;
-    padding: 4px 8px;
-    margin: -5px -9px 6px;
-    outline: none;
-  }
-  .todo-meta {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-  .tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 3px 9px;
-    border-radius: 100px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  .tag-priority-high { background: var(--danger-soft); color: var(--danger); }
-  .tag-priority-medium { background: var(--warning-soft); color: var(--warning); }
-  .tag-priority-low { background: var(--success-soft); color: var(--success); }
-  .tag-category { background: var(--info-soft); color: var(--info); }
-  .tag-due { background: var(--bg-soft); color: var(--text-dim); }
-  .tag-due.overdue { background: var(--danger-soft); color: var(--danger); }
-  .tag-due.today { background: var(--warning-soft); color: var(--warning); }
-
-  .todo-actions {
-    display: flex;
-    gap: 4px;
-    opacity: 0;
-    transition: opacity 0.15s;
-  }
-  .todo:hover .todo-actions { opacity: 1; }
-  .icon-btn {
-    width: 32px; height: 32px;
-    background: transparent;
-    border: none;
-    color: var(--text-faint);
-    cursor: pointer;
-    border-radius: 7px;
-    display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
-  }
-  .icon-btn:hover { background: var(--bg-soft); color: var(--text); }
-  .icon-btn.danger:hover { background: var(--danger-soft); color: var(--danger); }
-  .icon-btn svg { width: 16px; height: 16px; }
-
-  /* Subtasks */
-  .subtasks {
-    margin-top: 10px;
-    padding-left: 14px;
-    border-left: 2px solid var(--border);
-    display: grid;
-    gap: 6px;
-  }
-  .subtask {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: var(--text-dim);
-  }
-  .subtask .mini-check {
-    width: 14px; height: 14px;
-    border: 1.5px solid var(--border);
-    border-radius: 4px;
-    cursor: pointer;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .subtask.done .mini-check { background: var(--success); border-color: var(--success); }
-  .subtask.done .mini-check::after { content: '✓'; color: white; font-size: 10px; font-weight: bold; }
-  .subtask.done span { text-decoration: line-through; color: var(--text-faint); }
-
-  /* Empty state */
-  .empty-state {
+  .ratio-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .ratio-btn {
+    padding: 10px 4px; background: var(--bg-soft); border: 1px solid var(--border);
+    border-radius: var(--radius-sm); color: var(--text-dim); font-size: 12px;
+    font-weight: 600; cursor: pointer; transition: all 0.15s; font-family: inherit;
     text-align: center;
-    padding: 60px 20px;
-    color: var(--text-faint);
   }
-  .empty-state .emoji { font-size: 48px; margin-bottom: 14px; }
-  .empty-state h3 { font-size: 17px; color: var(--text-dim); margin-bottom: 6px; font-weight: 600; }
-  .empty-state p { font-size: 14px; }
+  .ratio-btn:hover { color: var(--text); border-color: #38415a; }
+  .ratio-btn.active { background: var(--accent); color: #2a1d00; border-color: var(--accent); }
 
-  /* ---------- Modal ---------- */
-  .modal-backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px; background: var(--bg-soft); border-radius: var(--radius-sm);
+    margin-bottom: 16px;
+  }
+  .toggle-row .label { font-size: 13px; }
+  .toggle-row .label small { display: block; color: var(--text-faint); font-size: 11px; margin-top: 2px; }
+  .switch { position: relative; width: 40px; height: 22px; }
+  .switch input { opacity: 0; width: 0; height: 0; }
+  .slider {
+    position: absolute; cursor: pointer; inset: 0;
+    background: var(--border); border-radius: 100px; transition: 0.2s;
+  }
+  .slider::before {
+    content: ''; position: absolute; height: 16px; width: 16px;
+    left: 3px; top: 3px; background: white; border-radius: 50%; transition: 0.2s;
+  }
+  input:checked + .slider { background: var(--accent); }
+  input:checked + .slider::before { transform: translateX(18px); }
+
+  /* ---------- Result panel ---------- */
+  .result-panel { min-height: 500px; display: flex; flex-direction: column; }
+  .result-area {
+    flex: 1; background: var(--bg-soft); border: 1px dashed var(--border);
+    border-radius: var(--radius); display: flex; align-items: center;
+    justify-content: center; min-height: 420px; padding: 20px; position: relative;
+    overflow: hidden;
+  }
+  .result-placeholder { text-align: center; color: var(--text-faint); }
+  .result-placeholder .emoji { font-size: 56px; margin-bottom: 14px; }
+  .result-placeholder h3 { font-size: 16px; color: var(--text-dim); margin-bottom: 6px; font-weight: 600; }
+  .result-placeholder p { font-size: 13px; max-width: 280px; margin: 0 auto; }
+  .result-image { max-width: 100%; max-height: 600px; border-radius: var(--radius-sm); box-shadow: 0 8px 24px rgba(0,0,0,0.5); }
+  .loading-overlay {
+    position: absolute; inset: 0; background: rgba(15, 17, 23, 0.85);
+    display: none; align-items: center; justify-content: center; flex-direction: column; gap: 14px;
     backdrop-filter: blur(4px);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    padding: 24px;
   }
-  .modal-backdrop.active { display: flex; animation: fadeIn 0.15s ease; }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .modal {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 28px;
-    max-width: 480px;
-    width: 100%;
-    box-shadow: var(--shadow);
-    animation: modalIn 0.2s ease;
-  }
-  @keyframes modalIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  .modal h3 { font-size: 19px; margin-bottom: 6px; }
-  .modal p { color: var(--text-dim); font-size: 14px; margin-bottom: 20px; }
-  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 22px; }
-
-  /* ---------- AI subtask modal ---------- */
-  .ai-subtasks {
-    background: var(--bg-soft);
-    border-radius: var(--radius-sm);
-    padding: 14px;
-    margin-bottom: 18px;
-    max-height: 260px;
-    overflow-y: auto;
-  }
-  .ai-subtask-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-  }
-  .ai-subtask-item:last-child { border-bottom: none; }
-  .ai-subtask-item input[type="checkbox"] { margin-top: 3px; accent-color: var(--accent); }
-  .ai-loading {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    justify-content: center;
-    padding: 20px;
-    color: var(--text-dim);
-    font-size: 14px;
-  }
-  .spinner {
-    width: 16px; height: 16px;
-    border: 2px solid var(--border);
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
+  .loading-overlay.active { display: flex; }
+  .spinner-large {
+    width: 40px; height: 40px;
+    border: 3px solid var(--border); border-top-color: var(--accent);
+    border-radius: 50%; animation: spin 0.8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 14px; color: var(--text-dim); }
+
+  .result-actions {
+    display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;
+  }
+  .result-prompt {
+    margin-top: 14px; padding: 12px 14px; background: var(--bg-soft);
+    border-radius: var(--radius-sm); font-size: 13px; color: var(--text-dim);
+    border-left: 3px solid var(--accent);
+  }
+
+  /* ---------- History ---------- */
+  .history-section { margin-top: 32px; }
+  .history-header {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+  }
+  .history-header h2 { font-size: 15px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; }
+  .history-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px;
+  }
+  .history-item {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: all 0.18s;
+    position: relative;
+  }
+  .history-item:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .history-item img { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: var(--bg-soft); }
+  .history-item .meta { padding: 10px 12px; }
+  .history-item .meta .prompt { font-size: 12px; color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .history-item .meta .date { font-size: 11px; color: var(--text-faint); margin-top: 3px; }
+  .history-item .delete-btn {
+    position: absolute; top: 8px; right: 8px;
+    width: 28px; height: 28px; border-radius: 7px;
+    background: rgba(15, 17, 23, 0.85); border: none; color: var(--text-dim);
+    cursor: pointer; display: none; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .history-item:hover .delete-btn { display: flex; }
+  .history-item .delete-btn:hover { background: var(--danger); color: white; }
+
+  .empty-history { text-align: center; padding: 40px 20px; color: var(--text-faint); font-size: 14px; }
 
   /* ---------- Toast ---------- */
-  .toast-container {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    z-index: 200;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+  .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 200; display: flex; flex-direction: column; gap: 10px; }
   .toast {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 12px 18px;
-    font-size: 14px;
-    box-shadow: var(--shadow);
-    animation: toastIn 0.2s ease;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    max-width: 320px;
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm);
+    padding: 12px 18px; font-size: 14px; box-shadow: var(--shadow);
+    animation: toastIn 0.2s ease; display: flex; align-items: center; gap: 10px; max-width: 340px;
   }
   @keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
   .toast.success { border-left: 3px solid var(--success); }
   .toast.error { border-left: 3px solid var(--danger); }
   .toast.info { border-left: 3px solid var(--info); }
 
+  /* ---------- Modal ---------- */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
+    display: none; align-items: center; justify-content: center; z-index: 100; padding: 24px;
+  }
+  .modal-backdrop.active { display: flex; animation: fadeIn 0.15s ease; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 28px; max-width: 440px; width: 100%; box-shadow: var(--shadow);
+    animation: modalIn 0.2s ease;
+  }
+  @keyframes modalIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal h3 { font-size: 19px; margin-bottom: 6px; }
+  .modal p { color: var(--text-dim); font-size: 14px; margin-bottom: 20px; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
+
   /* ---------- Responsive ---------- */
-  @media (max-width: 720px) {
-    .stats { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
     .header-inner { padding: 12px 16px; }
     main { padding: 20px 16px 60px; }
-    .composer-row { flex-direction: column; }
-    .search-input { min-width: 0; flex: 1; }
-    .todo-actions { opacity: 1; }
     .user-chip .name { display: none; }
     .user-chip { padding: 6px; }
   }
@@ -588,18 +282,18 @@
 <!-- ============ AUTH SCREEN ============ -->
 <div id="auth-screen">
   <div class="auth-card">
-    <div class="auth-logo">✓</div>
-    <h1>Tasker</h1>
-    <p>A smart to-do app powered by Puter.js — sign in to sync your tasks to the cloud.</p>
+    <div class="auth-logo">🍌</div>
+    <h1>Banana Studio</h1>
+    <p>Générez des images avec Google Nano Banana — gratuit, sans clé API, propulsé par Puter.js</p>
     <div class="auth-features">
-      <div class="auth-feature"><span class="dot" style="background:var(--accent)"></span>Cloud-synced across all your devices</div>
-      <div class="auth-feature"><span class="dot" style="background:var(--success)"></span>AI-powered task breakdown</div>
-      <div class="auth-feature"><span class="dot" style="background:var(--warning)"></span>Due dates, priorities & categories</div>
-      <div class="auth-feature"><span class="dot" style="background:var(--info)"></span>No backend to manage — Puter handles it</div>
+      <div class="auth-feature"><span class="dot" style="background:var(--banana)"></span>Nano Banana 2.1 (Gemini) par défaut</div>
+      <div class="auth-feature"><span class="dot" style="background:var(--success)"></span>Pas de clé API, pas de carte bancaire</div>
+      <div class="auth-feature"><span class="dot" style="background:var(--info)"></span>Historique sauvegardé dans votre cloud Puter</div>
+      <div class="auth-feature"><span class="dot" style="background:var(--accent)"></span>Mode test pour générer sans crédits</div>
     </div>
     <button class="btn btn-primary btn-block" id="sign-in-btn">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-      Sign in with Puter
+      Se connecter avec Puter
     </button>
   </div>
 </div>
@@ -609,117 +303,144 @@
   <header class="app-header">
     <div class="header-inner">
       <div class="brand">
-        <div class="brand-logo">✓</div>
-        <span>Tasker</span>
+        <div class="brand-logo">🍌</div>
+        <span>Banana Studio</span>
       </div>
       <div class="header-spacer"></div>
-      <div class="user-chip" id="user-chip">
+      <div class="user-chip">
         <span class="name" id="user-name">User</span>
         <img id="user-avatar" src="" alt="avatar" onerror="this.style.display='none'" />
       </div>
-      <button class="btn btn-ghost btn-sm" id="sign-out-btn">Sign out</button>
+      <button class="btn btn-ghost btn-sm" id="sign-out-btn">Déconnexion</button>
     </div>
   </header>
 
   <main>
-    <!-- Stats -->
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-label">Total</div>
-        <div class="stat-value accent" id="stat-total">0</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Active</div>
-        <div class="stat-value warning" id="stat-active">0</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Completed</div>
-        <div class="stat-value success" id="stat-done">0</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">Overdue</div>
-        <div class="stat-value info" id="stat-overdue">0</div>
-      </div>
-    </div>
+    <div class="layout">
+      <!-- Composer -->
+      <div class="panel">
+        <h2>Créer une image</h2>
 
-    <!-- Composer -->
-    <div class="composer">
-      <div class="composer-row">
-        <input type="text" id="new-todo-input" placeholder="What needs to be done?" maxlength="200" />
-        <button class="btn btn-primary" id="add-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add
+        <div class="field">
+          <label for="prompt">Description (prompt)</label>
+          <textarea id="prompt" placeholder="Ex: Un renard astronauta flottant dans l'espace, style aquarelle, couleurs vives"></textarea>
+          <div class="field-hint">Soyez précis : sujet, style, éclairage, ambiance.</div>
+        </div>
+
+        <div class="toggle-row">
+          <div class="label">
+            Mode test (gratuit)
+            <small>Génère une image d'exemple sans utiliser de crédits</small>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="test-mode" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="field">
+          <label for="model">Modèle</label>
+          <select id="model">
+            <option value="gemini-nano-banana-2.1">Nano Banana 2.1 (Gemini) — recommandé</option>
+            <option value="gemini-3.1-flash-image">Gemini 3.1 Flash Image</option>
+            <option value="gemini-3.1-flash-lite-image">Gemini 3.1 Flash Lite Image</option>
+            <option value="gemini-3-pro-image">Gemini 3 Pro Image</option>
+            <option value="replicate:google/nano-banana-2">Nano Banana 2 (via Replicate)</option>
+            <option value="gpt-image-2">GPT Image 2 (OpenAI)</option>
+            <option value="dola-seedream-5-0-pro-260628">Seedream 5.0 Pro (BytePlus)</option>
+            <option value="black-forest-labs/flux-schnell">FLUX Schnell (Replicate)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="quality">Qualité</label>
+          <select id="quality">
+            <option value="1K">1K (rapide)</option>
+            <option value="2K" selected>2K (équilibré)</option>
+            <option value="4K">4K (haute résolution)</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Format</label>
+          <div class="ratio-grid">
+            <button class="ratio-btn active" data-ratio="1:1" data-w="1" data-h="1">1:1</button>
+            <button class="ratio-btn" data-ratio="16:9" data-w="16" data-h="9">16:9</button>
+            <button class="ratio-btn" data-ratio="9:16" data-w="9" data-h="16">9:16</button>
+            <button class="ratio-btn" data-ratio="4:3" data-w="4" data-h="3">4:3</button>
+            <button class="ratio-btn" data-ratio="3:4" data-w="3" data-h="4">3:4</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-block" id="generate-btn" style="margin-top:8px;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5z"/></svg>
+          Générer l'image
         </button>
       </div>
-      <div class="composer-meta">
-        <select id="new-priority">
-          <option value="low">Priority: Low</option>
-          <option value="medium" selected>Priority: Medium</option>
-          <option value="high">Priority: High</option>
-        </select>
-        <select id="new-category">
-          <option value="">No category</option>
-          <option value="Work">Work</option>
-          <option value="Personal">Personal</option>
-          <option value="Shopping">Shopping</option>
-          <option value="Health">Health</option>
-          <option value="Learning">Learning</option>
-          <option value="Home">Home</option>
-        </select>
-        <input type="date" id="new-due" />
+
+      <!-- Result -->
+      <div class="panel result-panel">
+        <h2>Résultat</h2>
+        <div class="result-area" id="result-area">
+          <div class="result-placeholder" id="result-placeholder">
+            <div class="emoji">🎨</div>
+            <h3>Aucune image encore</h3>
+            <p>Décrivez ce que vous voulez voir, puis cliquez sur « Générer l'image ». Activez le mode test pour commencer sans crédits.</p>
+          </div>
+          <div class="loading-overlay" id="loading-overlay">
+            <div class="spinner-large"></div>
+            <div class="loading-text" id="loading-text">Génération en cours...</div>
+          </div>
+        </div>
+        <div class="result-actions" id="result-actions" style="display:none;">
+          <button class="btn btn-ghost btn-sm" id="download-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Télécharger
+          </button>
+          <button class="btn btn-ghost btn-sm" id="save-to-puter-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Sauver sur Puter
+          </button>
+          <button class="btn btn-ghost btn-sm" id="reuse-btn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Réutiliser le prompt
+          </button>
+        </div>
+        <div class="result-prompt" id="result-prompt" style="display:none;"></div>
       </div>
     </div>
 
-    <!-- Toolbar -->
-    <div class="toolbar">
-      <div class="filter-group">
-        <button class="filter-btn active" data-filter="all">All</button>
-        <button class="filter-btn" data-filter="active">Active</button>
-        <button class="filter-btn" data-filter="completed">Completed</button>
+    <!-- History -->
+    <div class="history-section">
+      <div class="history-header">
+        <h2>Historique</h2>
+        <button class="btn btn-ghost btn-sm" id="clear-history-btn">Tout effacer</button>
       </div>
-      <div class="toolbar-spacer"></div>
-      <input type="text" class="search-input" id="search-input" placeholder="Search tasks..." />
-      <select id="sort-select" class="search-input" style="min-width:140px">
-        <option value="created">Sort: Newest</option>
-        <option value="priority">Sort: Priority</option>
-        <option value="due">Sort: Due date</option>
-        <option value="alpha">Sort: A–Z</option>
-      </select>
-    </div>
-
-    <!-- Todo list -->
-    <div class="todo-list" id="todo-list"></div>
-
-    <!-- Empty state -->
-    <div class="empty-state" id="empty-state" style="display:none">
-      <div class="emoji">🎯</div>
-      <h3>No tasks yet</h3>
-      <p>Add your first task above to get started.</p>
+      <div class="history-grid" id="history-grid"></div>
+      <div class="empty-history" id="empty-history" style="display:none;">Aucune image dans l'historique pour le moment.</div>
     </div>
   </main>
 </div>
 
-<!-- ============ CONFIRM MODAL ============ -->
+<!-- Confirm modal -->
 <div class="modal-backdrop" id="confirm-modal">
   <div class="modal">
-    <h3 id="confirm-title">Confirm</h3>
-    <p id="confirm-text">Are you sure?</p>
+    <h3 id="confirm-title">Confirmer</h3>
+    <p id="confirm-text">Êtes-vous sûr ?</p>
     <div class="modal-actions">
-      <button class="btn btn-ghost" id="confirm-cancel">Cancel</button>
-      <button class="btn btn-danger" id="confirm-ok">Delete</button>
+      <button class="btn btn-ghost" id="confirm-cancel">Annuler</button>
+      <button class="btn btn-primary" id="confirm-ok" style="background:var(--danger);color:white;">Confirmer</button>
     </div>
   </div>
 </div>
 
-<!-- ============ AI SUBTASK MODAL ============ -->
-<div class="modal-backdrop" id="ai-modal">
-  <div class="modal">
-    <h3>✨ AI Task Breakdown</h3>
-    <p id="ai-task-text">Let AI break this task into manageable subtasks.</p>
-    <div id="ai-content"></div>
+<!-- Image viewer modal -->
+<div class="modal-backdrop" id="viewer-modal">
+  <div class="modal" style="max-width:680px;">
+    <img id="viewer-img" src="" alt="" style="width:100%;border-radius:var(--radius-sm);display:block;" />
+    <div id="viewer-prompt" style="margin-top:14px;font-size:13px;color:var(--text-dim);"></div>
     <div class="modal-actions">
-      <button class="btn btn-ghost" id="ai-cancel">Cancel</button>
-      <button class="btn btn-primary" id="ai-add" disabled>Add subtasks</button>
+      <button class="btn btn-ghost" id="viewer-close">Fermer</button>
     </div>
   </div>
 </div>
@@ -728,23 +449,22 @@
 
 <script>
 /* ============================================================
-   Tasker — a Puter.js to-do app
-   Uses: puter.auth, puter.kv, puter.ai.chat
+   Banana Studio — Générateur d'images via Puter.js
+   Utilise: puter.auth, puter.kv, puter.ai.txt2img, puter.fs
    ============================================================ */
 
-const STORAGE_KEY = 'tasker_todos_v1';
-let todos = [];
-let currentFilter = 'all';
-let currentSort = 'created';
-let searchQuery = '';
+const HISTORY_KEY = 'banana_studio_history_v1';
+let history = [];
+let currentImageSrc = null;
+let currentPrompt = '';
+let currentRatio = { w: 1, h: 1 };
 let confirmCallback = null;
-let aiGeneratedSubtasks = [];
 
 /* ---------- Auth ---------- */
 async function init() {
   try {
     if (puter.auth.isSignedIn()) {
-      await loadUserAndTodos();
+      await loadUserAndHistory();
       showApp();
     } else {
       showAuth();
@@ -759,13 +479,12 @@ function showAuth() {
   document.getElementById('auth-screen').style.display = 'flex';
   document.getElementById('app').classList.remove('active');
 }
-
 function showApp() {
   document.getElementById('auth-screen').style.display = 'none';
   document.getElementById('app').classList.add('active');
 }
 
-async function loadUserAndTodos() {
+async function loadUserAndHistory() {
   try {
     const user = await puter.auth.getUser();
     if (user && user.username) {
@@ -777,351 +496,210 @@ async function loadUserAndTodos() {
         document.getElementById('user-avatar').src = pic;
         document.getElementById('user-avatar').style.display = 'block';
       }
-    } catch (e) { /* avatar optional */ }
-  } catch (e) {
-    console.warn('getUser failed:', e);
-  }
-  await loadTodos();
+    } catch (e) {}
+  } catch (e) {}
+  await loadHistory();
 }
 
-/* ---------- Storage (Puter KV) ---------- */
-async function loadTodos() {
+/* ---------- History (Puter KV) ---------- */
+async function loadHistory() {
   try {
-    const raw = await puter.kv.get(STORAGE_KEY);
-    if (raw) {
-      todos = JSON.parse(raw);
-    } else {
-      todos = [];
-    }
+    const raw = await puter.kv.get(HISTORY_KEY);
+    history = raw ? JSON.parse(raw) : [];
   } catch (e) {
-    console.error('loadTodos failed:', e);
-    toast('Failed to load tasks from cloud', 'error');
-    todos = [];
+    console.error('loadHistory failed:', e);
+    history = [];
   }
-  render();
+  renderHistory();
 }
 
-async function saveTodos() {
+async function saveHistory() {
   try {
-    await puter.kv.set(STORAGE_KEY, JSON.stringify(todos));
+    await puter.kv.set(HISTORY_KEY, JSON.stringify(history));
   } catch (e) {
-    console.error('saveTodos failed:', e);
-    toast('Failed to save to cloud', 'error');
+    console.error('saveHistory failed:', e);
   }
 }
 
-/* ---------- Todo CRUD ---------- */
-async function addTodo() {
-  const input = document.getElementById('new-todo-input');
-  const text = input.value.trim();
-  if (!text) {
-    input.focus();
+/* ---------- Image generation ---------- */
+async function generate() {
+  const prompt = document.getElementById('prompt').value.trim();
+  if (!prompt) {
+    toast('Veuillez décrire l\'image à générer', 'error');
+    document.getElementById('prompt').focus();
     return;
   }
-  const priority = document.getElementById('new-priority').value;
-  const category = document.getElementById('new-category').value;
-  const due = document.getElementById('new-due').value;
 
-  const todo = {
-    id: 't_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
-    title: text,
-    completed: false,
-    priority: priority,
-    category: category,
-    due: due,
-    subtasks: [],
-    createdAt: Date.now()
-  };
-  todos.unshift(todo);
-  input.value = '';
-  document.getElementById('new-due').value = '';
-  await saveTodos();
-  render();
-  toast('Task added', 'success');
-}
+  const model = document.getElementById('model').value;
+  const quality = document.getElementById('quality').value;
+  const testMode = document.getElementById('test-mode').checked;
 
-async function toggleTodo(id) {
-  const t = todos.find(x => x.id === id);
-  if (t) {
-    t.completed = !t.completed;
-    await saveTodos();
-    render();
-  }
-}
+  const btn = document.getElementById('generate-btn');
+  btn.disabled = true;
+  const overlay = document.getElementById('loading-overlay');
+  const loadingText = document.getElementById('loading-text');
+  overlay.classList.add('active');
+  loadingText.textContent = testMode ? 'Mode test : génération d\'une image d\'exemple...' : 'Génération en cours avec ' + model + '...';
 
-async function deleteTodo(id) {
-  const t = todos.find(x => x.id === id);
-  if (!t) return;
-  showConfirm('Delete task?', `"${t.title}" will be permanently removed.`, async () => {
-    todos = todos.filter(x => x.id !== id);
-    await saveTodos();
-    render();
-    toast('Task deleted', 'info');
-  });
-}
-
-function startEdit(id) {
-  const titleEl = document.querySelector(`[data-id="${id}"] .todo-title`);
-  if (!titleEl) return;
-  const t = todos.find(x => x.id === id);
-  if (!t) return;
-  titleEl.contentEditable = 'true';
-  titleEl.classList.add('editing');
-  titleEl.focus();
-  // Select all
-  const range = document.createRange();
-  range.selectNodeContents(titleEl);
-  const sel = window.getSelection();
-  sel.removeAllRanges();
-  sel.addRange(range);
-
-  const finish = async () => {
-    titleEl.contentEditable = 'false';
-    titleEl.classList.remove('editing');
-    const newText = titleEl.textContent.trim();
-    if (newText && newText !== t.title) {
-      t.title = newText;
-      await saveTodos();
-      toast('Task updated', 'success');
-    } else {
-      titleEl.textContent = t.title;
-    }
-    titleEl.removeEventListener('blur', finish);
-    titleEl.removeEventListener('keydown', onKey);
-  };
-  const onKey = (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); titleEl.blur(); }
-    if (e.key === 'Escape') { titleEl.textContent = t.title; titleEl.blur(); }
-  };
-  titleEl.addEventListener('blur', finish);
-  titleEl.addEventListener('keydown', onKey);
-}
-
-async function toggleSubtask(todoId, idx) {
-  const t = todos.find(x => x.id === todoId);
-  if (!t || !t.subtasks[idx]) return;
-  t.subtasks[idx].done = !t.subtasks[idx].done;
-  await saveTodos();
-  render();
-}
-
-/* ---------- AI subtask generation ---------- */
-async function generateSubtasks(id) {
-  const t = todos.find(x => x.id === id);
-  if (!t) return;
-  const modal = document.getElementById('ai-modal');
-  const content = document.getElementById('ai-content');
-  const addBtn = document.getElementById('ai-add');
-  const taskTextEl = document.getElementById('ai-task-text');
-
-  taskTextEl.textContent = `Breaking down: "${t.title}"`;
-  content.innerHTML = '<div class="ai-loading"><div class="spinner"></div>Asking AI for subtasks...</div>';
-  addBtn.disabled = true;
-  modal.classList.add('active');
-  aiGeneratedSubtasks = [];
+  // Hide previous result
+  document.getElementById('result-placeholder').style.display = 'none';
+  document.getElementById('result-actions').style.display = 'none';
+  document.getElementById('result-prompt').style.display = 'none';
+  // Remove any previous img
+  const prevImg = document.querySelector('.result-image');
+  if (prevImg) prevImg.remove();
 
   try {
-    const prompt = `Break the following task into 3-6 clear, actionable subtasks. Return ONLY a JSON array of strings, no commentary, no markdown fences.\n\nTask: "${t.title}"`;
-    const resp = await puter.ai.chat(prompt, { model: 'gpt-4o-mini' });
-    let raw = resp?.message?.content || resp?.text || (typeof resp === 'string' ? resp : '');
-    if (Array.isArray(resp?.message?.content)) {
-      raw = resp.message.content.map(p => p.text || '').join('');
+    const options = {
+      model: model,
+      testMode: testMode,
+      ratio: currentRatio
+    };
+    // Add quality only for models that support it (Gemini family)
+    if (model.startsWith('gemini') || model.includes('nano-banana')) {
+      options.quality = quality;
     }
-    // Try to extract JSON array
-    raw = raw.trim();
-    const match = raw.match(/\[[\s\S]*\]/);
-    let subs = [];
-    if (match) {
-      try { subs = JSON.parse(match[0]); } catch (e) { /* ignore */ }
-    }
-    if (!Array.isArray(subs) || subs.length === 0) {
-      // Fallback: split by newlines
-      subs = raw.split(/\n+/).map(s => s.replace(/^[\d\-\*\.\)\s]+/, '').trim()).filter(Boolean);
-    }
-    subs = subs.slice(0, 6);
-
-    if (subs.length === 0) {
-      content.innerHTML = '<p style="color:var(--text-dim);font-size:14px;">AI could not generate subtasks. Try rephrasing your task.</p>';
-      return;
+    // For replicate nano-banana, use quality as resolution tier
+    if (model.startsWith('replicate:')) {
+      options.quality = quality;
     }
 
-    aiGeneratedSubtasks = subs.map(s => ({ text: s, done: false }));
-    let html = '<div class="ai-subtasks">';
-    subs.forEach((s, i) => {
-      html += `<div class="ai-subtask-item">
-        <input type="checkbox" checked data-idx="${i}" />
-        <span>${escapeHtml(s)}</span>
-      </div>`;
-    });
-    html += '</div>';
-    content.innerHTML = html;
+    const image = await puter.ai.txt2img(prompt, options);
+    const src = image.src || image.toString();
 
-    // Wire up checkboxes
-    content.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-      cb.addEventListener('change', () => {
-        const idx = parseInt(cb.dataset.idx);
-        if (cb.checked) {
-          if (!aiGeneratedSubtasks[idx]) aiGeneratedSubtasks[idx] = { text: subs[idx], done: false };
-        }
+    currentImageSrc = src;
+    currentPrompt = prompt;
+
+    // Display
+    const imgEl = document.createElement('img');
+    imgEl.className = 'result-image';
+    imgEl.src = src;
+    imgEl.alt = prompt;
+    document.getElementById('result-area').appendChild(imgEl);
+
+    document.getElementById('result-actions').style.display = 'flex';
+    const promptBox = document.getElementById('result-prompt');
+    promptBox.textContent = '📝 ' + prompt;
+    promptBox.style.display = 'block';
+
+    // Add to history (skip in test mode to avoid polluting history with sample images)
+    if (!testMode) {
+      history.unshift({
+        id: 'img_' + Date.now(),
+        src: src,
+        prompt: prompt,
+        model: model,
+        quality: quality,
+        ratio: currentRatio.w + ':' + currentRatio.h,
+        createdAt: Date.now()
       });
-    });
+      // Keep last 30
+      if (history.length > 30) history = history.slice(0, 30);
+      await saveHistory();
+      renderHistory();
+    }
 
-    addBtn.disabled = false;
+    overlay.classList.remove('active');
+    toast(testMode ? 'Image d\'exemple générée (mode test)' : 'Image générée !', 'success');
   } catch (e) {
-    console.error('AI subtask error:', e);
-    content.innerHTML = '<p style="color:var(--danger);font-size:14px;">AI request failed. Please try again.</p>';
-  }
-}
-
-async function addAISubtasks(todoId) {
-  const t = todos.find(x => x.id === todoId);
-  if (!t) return;
-  // Only add checked ones
-  const content = document.getElementById('ai-content');
-  const checked = [];
-  content.querySelectorAll('input[type="checkbox"]').forEach(cb => {
-    if (cb.checked) {
-      const idx = parseInt(cb.dataset.idx);
-      checked.push(aiGeneratedSubtasks[idx]);
+    console.error('Generation failed:', e);
+    overlay.classList.remove('active');
+    document.getElementById('result-placeholder').style.display = 'block';
+    let msg = 'Échec de la génération';
+    if (e && e.code === 'insufficient_funds') {
+      msg = 'Crédits insuffisants. Activez le mode test ou connectez un autre compte Puter.';
+    } else if (e && e.code === 'moderation_flagged') {
+      msg = 'Le prompt a été refusé par le filtre de contenu. Modifiez votre description.';
+    } else if (e && e.message) {
+      msg = 'Erreur : ' + e.message;
     }
-  });
-  if (checked.length > 0) {
-    t.subtasks = (t.subtasks || []).concat(checked);
-    await saveTodos();
-    render();
-    toast(`Added ${checked.length} subtask${checked.length > 1 ? 's' : ''}`, 'success');
+    toast(msg, 'error');
+  } finally {
+    btn.disabled = false;
   }
-  document.getElementById('ai-modal').classList.remove('active');
 }
 
-/* ---------- Rendering ---------- */
-function render() {
-  renderStats();
-  renderList();
+/* ---------- Download ---------- */
+function downloadImage() {
+  if (!currentImageSrc) return;
+  const a = document.createElement('a');
+  a.href = currentImageSrc;
+  const safe = currentPrompt.slice(0, 40).replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'image';
+  a.download = 'banana_' + safe + '.png';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  toast('Téléchargement démarré', 'success');
 }
 
-function renderStats() {
-  const total = todos.length;
-  const done = todos.filter(t => t.completed).length;
-  const active = total - done;
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const overdue = todos.filter(t => !t.completed && t.due && new Date(t.due) < today).length;
-  document.getElementById('stat-total').textContent = total;
-  document.getElementById('stat-active').textContent = active;
-  document.getElementById('stat-done').textContent = done;
-  document.getElementById('stat-overdue').textContent = overdue;
-}
-
-function getFilteredSorted() {
-  let list = [...todos];
-  // Filter
-  if (currentFilter === 'active') list = list.filter(t => !t.completed);
-  else if (currentFilter === 'completed') list = list.filter(t => t.completed);
-  // Search
-  if (searchQuery) {
-    const q = searchQuery.toLowerCase();
-    list = list.filter(t => t.title.toLowerCase().includes(q) || (t.category || '').toLowerCase().includes(q));
+/* ---------- Save to Puter FS ---------- */
+async function saveToPuter() {
+  if (!currentImageSrc) return;
+  try {
+    const safe = currentPrompt.slice(0, 30).replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'image';
+    const filename = 'banana_' + safe + '_' + Date.now() + '.png';
+    const path = '~/Pictures/' + filename;
+    toast('Sauvegarde sur Puter...', 'info');
+    // Fetch the image data and write to Puter filesystem
+    const response = await fetch(currentImageSrc);
+    const blob = await response.blob();
+    await puter.fs.write(path, blob);
+    toast('Image sauvegardée dans ~/Pictures/' + filename, 'success');
+  } catch (e) {
+    console.error('Save to Puter failed:', e);
+    toast('Échec de la sauvegarde : ' + (e.message || 'erreur'), 'error');
   }
-  // Sort
-  const priorityOrder = { high: 0, medium: 1, low: 2 };
-  if (currentSort === 'priority') {
-    list.sort((a, b) => (priorityOrder[a.priority] || 1) - (priorityOrder[b.priority] || 1));
-  } else if (currentSort === 'due') {
-    list.sort((a, b) => {
-      if (!a.due && !b.due) return 0;
-      if (!a.due) return 1;
-      if (!b.due) return -1;
-      return new Date(a.due) - new Date(b.due);
-    });
-  } else if (currentSort === 'alpha') {
-    list.sort((a, b) => a.title.localeCompare(b.title));
-  } else {
-    list.sort((a, b) => b.createdAt - a.createdAt);
-  }
-  return list;
 }
 
-function renderList() {
-  const list = getFilteredSorted();
-  const container = document.getElementById('todo-list');
-  const empty = document.getElementById('empty-state');
-
-  if (list.length === 0) {
-    container.innerHTML = '';
+/* ---------- History rendering ---------- */
+function renderHistory() {
+  const grid = document.getElementById('history-grid');
+  const empty = document.getElementById('empty-history');
+  if (history.length === 0) {
+    grid.innerHTML = '';
     empty.style.display = 'block';
-    if (todos.length > 0) {
-      empty.querySelector('h3').textContent = 'Nothing here';
-      empty.querySelector('p').textContent = 'No tasks match your current filter.';
-      empty.querySelector('.emoji').textContent = '🔍';
-    } else {
-      empty.querySelector('h3').textContent = 'No tasks yet';
-      empty.querySelector('p').textContent = 'Add your first task above to get started.';
-      empty.querySelector('.emoji').textContent = '🎯';
-    }
     return;
   }
   empty.style.display = 'none';
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  container.innerHTML = list.map(t => {
-    const priorityLabel = t.priority || 'medium';
-    let dueTag = '';
-    if (t.due) {
-      const dueDate = new Date(t.due);
-      const dueDateStr = dueDate.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-      let dueClass = '';
-      if (!t.completed) {
-        if (dueDate < today) dueClass = 'overdue';
-        else if (dueDate.getTime() === today.getTime()) dueClass = 'today';
-      }
-      dueTag = `<span class="tag tag-due ${dueClass}">📅 ${dueDateStr}</span>`;
-    }
-    const categoryTag = t.category ? `<span class="tag tag-category">${escapeHtml(t.category)}</span>` : '';
-    const priorityTag = `<span class="tag tag-priority-${priorityLabel}">● ${priorityLabel}</span>`;
-
-    let subtasksHtml = '';
-    if (t.subtasks && t.subtasks.length > 0) {
-      subtasksHtml = `<div class="subtasks">
-        ${t.subtasks.map((s, i) => `
-          <div class="subtask ${s.done ? 'done' : ''}" onclick="toggleSubtask('${t.id}', ${i})">
-            <div class="mini-check"></div>
-            <span>${escapeHtml(s.text)}</span>
-          </div>
-        `).join('')}
-      </div>`;
-    }
-
-    return `
-      <div class="todo ${t.completed ? 'completed' : ''}" data-id="${t.id}">
-        <div class="checkbox ${t.completed ? 'checked' : ''}" onclick="toggleTodo('${t.id}')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <div class="todo-body">
-          <div class="todo-title" onclick="startEdit('${t.id}')" title="Click to edit">${escapeHtml(t.title)}</div>
-          <div class="todo-meta">
-            ${priorityTag}
-            ${categoryTag}
-            ${dueTag}
-          </div>
-          ${subtasksHtml}
-        </div>
-        <div class="todo-actions">
-          <button class="icon-btn" title="AI subtasks" onclick="generateSubtasks('${t.id}')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l1.5 4.5L18 8l-4.5 1.5L12 14l-1.5-4.5L6 8l4.5-1.5z"/><path d="M18 14l.8 2.4L21 17l-2.2.6L18 20l-.8-2.4L15 17l2.2-.6z"/></svg>
-          </button>
-          <button class="icon-btn" title="Edit" onclick="startEdit('${t.id}')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-          </button>
-          <button class="icon-btn danger" title="Delete" onclick="deleteTodo('${t.id}')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-          </button>
-        </div>
+  grid.innerHTML = history.map(h => `
+    <div class="history-item" data-id="${h.id}">
+      <button class="delete-btn" data-del="${h.id}" title="Supprimer">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+      <img src="${h.src}" alt="${escapeAttr(h.prompt)}" loading="lazy" />
+      <div class="meta">
+        <div class="prompt" title="${escapeAttr(h.prompt)}">${escapeHtml(h.prompt)}</div>
+        <div class="date">${new Date(h.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} · ${h.ratio || '1:1'}</div>
       </div>
-    `;
-  }).join('');
+    </div>
+  `).join('');
+
+  // Wire up clicks
+  grid.querySelectorAll('.history-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      if (e.target.closest('.delete-btn')) return;
+      const id = item.dataset.id;
+      viewHistoryItem(id);
+    });
+  });
+  grid.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const id = btn.dataset.del;
+      history = history.filter(h => h.id !== id);
+      await saveHistory();
+      renderHistory();
+      toast('Image supprimée de l\'historique', 'info');
+    });
+  });
+}
+
+function viewHistoryItem(id) {
+  const h = history.find(x => x.id === id);
+  if (!h) return;
+  document.getElementById('viewer-img').src = h.src;
+  document.getElementById('viewer-prompt').textContent = '📝 ' + h.prompt + ' · ' + (h.model || '') + ' · ' + (h.quality || '');
+  document.getElementById('viewer-modal').classList.add('active');
 }
 
 /* ---------- Helpers ---------- */
@@ -1131,11 +709,14 @@ function escapeHtml(str) {
   div.textContent = str;
   return div.innerHTML;
 }
+function escapeAttr(str) {
+  return escapeHtml(str).replace(/"/g, '&quot;');
+}
 
 function toast(msg, type = 'info') {
   const container = document.getElementById('toast-container');
   const el = document.createElement('div');
-  el.className = `toast ${type}`;
+  el.className = 'toast ' + type;
   el.textContent = msg;
   container.appendChild(el);
   setTimeout(() => {
@@ -1143,7 +724,7 @@ function toast(msg, type = 'info') {
     el.style.opacity = '0';
     el.style.transform = 'translateX(20px)';
     setTimeout(() => el.remove(), 300);
-  }, 2600);
+  }, 3200);
 }
 
 function showConfirm(title, text, callback) {
@@ -1157,56 +738,61 @@ function showConfirm(title, text, callback) {
 document.getElementById('sign-in-btn').addEventListener('click', async () => {
   const btn = document.getElementById('sign-in-btn');
   btn.disabled = true;
-  btn.textContent = 'Signing in...';
+  btn.textContent = 'Connexion...';
   try {
     await puter.auth.signIn();
-    await loadUserAndTodos();
+    await loadUserAndHistory();
     showApp();
-    toast('Welcome to Tasker!', 'success');
+    toast('Bienvenue sur Banana Studio !', 'success');
   } catch (e) {
     console.error('Sign in failed:', e);
-    toast('Sign in failed', 'error');
+    toast('Échec de la connexion', 'error');
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Sign in with Puter';
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg> Se connecter avec Puter';
   }
 });
 
 document.getElementById('sign-out-btn').addEventListener('click', () => {
-  showConfirm('Sign out?', 'You will be returned to the sign-in screen. Your tasks stay saved in your Puter cloud.', async () => {
+  showConfirm('Déconnexion ?', 'Vous reviendrez à l\'écran de connexion. Votre historique reste sauvegardé dans votre cloud Puter.', async () => {
     try {
       puter.auth.signOut();
-      todos = [];
+      history = [];
       showAuth();
-      toast('Signed out', 'info');
-    } catch (e) {
-      console.error('Sign out failed:', e);
-    }
+      toast('Déconnecté', 'info');
+    } catch (e) { console.error(e); }
   });
 });
 
-document.getElementById('add-btn').addEventListener('click', addTodo);
-document.getElementById('new-todo-input').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') addTodo();
+document.getElementById('generate-btn').addEventListener('click', generate);
+document.getElementById('prompt').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) generate();
 });
 
-document.querySelectorAll('.filter-btn').forEach(btn => {
+document.querySelectorAll('.ratio-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.ratio-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    currentFilter = btn.dataset.filter;
-    render();
+    currentRatio = { w: parseInt(btn.dataset.w), h: parseInt(btn.dataset.h) };
   });
 });
 
-document.getElementById('search-input').addEventListener('input', (e) => {
-  searchQuery = e.target.value.trim();
-  render();
+document.getElementById('download-btn').addEventListener('click', downloadImage);
+document.getElementById('save-to-puter-btn').addEventListener('click', saveToPuter);
+document.getElementById('reuse-btn').addEventListener('click', () => {
+  document.getElementById('prompt').value = currentPrompt;
+  document.getElementById('prompt').focus();
+  toast('Prompt rechargé dans l\'éditeur', 'info');
 });
 
-document.getElementById('sort-select').addEventListener('change', (e) => {
-  currentSort = e.target.value;
-  render();
+document.getElementById('clear-history-btn').addEventListener('click', () => {
+  if (history.length === 0) return;
+  showConfirm('Effacer tout l\'historique ?', 'Toutes les images de l\'historique seront supprimées. Cette action est irréversible.', async () => {
+    history = [];
+    await saveHistory();
+    renderHistory();
+    toast('Historique effacé', 'info');
+  });
 });
 
 document.getElementById('confirm-cancel').addEventListener('click', () => {
@@ -1224,30 +810,14 @@ document.getElementById('confirm-modal').addEventListener('click', (e) => {
   }
 });
 
-document.getElementById('ai-cancel').addEventListener('click', () => {
-  document.getElementById('ai-modal').classList.remove('active');
+document.getElementById('viewer-close').addEventListener('click', () => {
+  document.getElementById('viewer-modal').classList.remove('active');
 });
-document.getElementById('ai-add').addEventListener('click', () => {
-  // Find which todo is being broken down by checking the ai-task-text
-  const text = document.getElementById('ai-task-text').textContent;
-  const match = text.match(/"(.+)"/);
-  if (match) {
-    const t = todos.find(x => x.title === match[1]);
-    if (t) addAISubtasks(t.id);
+document.getElementById('viewer-modal').addEventListener('click', (e) => {
+  if (e.target.id === 'viewer-modal') {
+    document.getElementById('viewer-modal').classList.remove('active');
   }
 });
-document.getElementById('ai-modal').addEventListener('click', (e) => {
-  if (e.target.id === 'ai-modal') {
-    document.getElementById('ai-modal').classList.remove('active');
-  }
-});
-
-// Make functions accessible for inline handlers
-window.toggleTodo = toggleTodo;
-window.deleteTodo = deleteTodo;
-window.startEdit = startEdit;
-window.toggleSubtask = toggleSubtask;
-window.generateSubtasks = generateSubtasks;
 
 // Boot
 init();
