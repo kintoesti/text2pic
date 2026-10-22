@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Banana Studio — Générateur d'images Nano Banana via Puter.js</title>
+<title>Banana Studio — Générateur d'images gratuit illimité</title>
 <script src="https://js.puter.com/v2/"></script>
 <style>
   :root {
@@ -44,27 +44,19 @@
   /* ---------- Auth ---------- */
   #auth-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
   .auth-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 48px 40px;
-    max-width: 460px;
-    width: 100%;
-    text-align: center;
-    box-shadow: var(--shadow);
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); padding: 48px 40px;
+    max-width: 480px; width: 100%; text-align: center; box-shadow: var(--shadow);
   }
   .auth-logo {
-    width: 76px; height: 76px;
-    margin: 0 auto 24px;
-    border-radius: 18px;
+    width: 76px; height: 76px; margin: 0 auto 24px; border-radius: 18px;
     background: linear-gradient(135deg, var(--banana), var(--accent-soft));
     display: flex; align-items: center; justify-content: center;
-    font-size: 40px;
-    box-shadow: 0 8px 24px var(--accent-glow);
+    font-size: 40px; box-shadow: 0 8px 24px var(--accent-glow);
   }
   .auth-card h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
-  .auth-card p { color: var(--text-dim); margin-bottom: 28px; font-size: 15px; }
-  .auth-features { text-align: left; margin-bottom: 28px; display: grid; gap: 10px; }
+  .auth-card p { color: var(--text-dim); margin-bottom: 20px; font-size: 15px; }
+  .auth-features { text-align: left; margin-bottom: 24px; display: grid; gap: 10px; }
   .auth-feature {
     display: flex; align-items: center; gap: 12px;
     padding: 12px 14px; background: var(--bg-soft);
@@ -81,8 +73,7 @@
   }
   .btn-primary {
     background: linear-gradient(135deg, var(--banana), var(--accent-soft));
-    color: #2a1d00;
-    box-shadow: 0 4px 14px var(--accent-glow);
+    color: #2a1d00; box-shadow: 0 4px 14px var(--accent-glow);
   }
   .btn-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 6px 20px var(--accent-glow); }
   .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
@@ -95,10 +86,8 @@
   #app { display: none; min-height: 100vh; }
   #app.active { display: block; }
   header.app-header {
-    background: rgba(23, 26, 35, 0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 50;
+    background: rgba(23, 26, 35, 0.85); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50;
   }
   .header-inner {
     max-width: 1200px; margin: 0 auto; padding: 14px 24px;
@@ -111,6 +100,14 @@
     display: flex; align-items: center; justify-content: center; font-size: 17px;
   }
   .header-spacer { flex: 1; }
+  .credits-chip {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 12px; background: var(--card);
+    border: 1px solid var(--border); border-radius: 100px; font-size: 13px;
+    color: var(--text-dim);
+  }
+  .credits-chip .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+  .credits-chip.low .dot { background: var(--danger); }
   .user-chip {
     display: flex; align-items: center; gap: 10px;
     padding: 6px 6px 6px 14px; background: var(--card);
@@ -120,15 +117,34 @@
   .user-chip .name { font-weight: 600; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
   main { max-width: 1200px; margin: 0 auto; padding: 28px 24px 80px; }
-
   .layout { display: grid; grid-template-columns: 380px 1fr; gap: 24px; align-items: start; }
 
-  /* ---------- Composer panel ---------- */
+  /* ---------- Panel ---------- */
   .panel {
     background: var(--card); border: 1px solid var(--border);
     border-radius: var(--radius); padding: 20px;
   }
   .panel h2 { font-size: 15px; font-weight: 600; margin-bottom: 16px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* Engine selector */
+  .engine-tabs {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+    background: var(--bg-soft); padding: 4px; border-radius: var(--radius-sm); margin-bottom: 16px;
+  }
+  .engine-tab {
+    padding: 9px; background: transparent; border: none; color: var(--text-dim);
+    font-size: 13px; font-weight: 600; cursor: pointer; border-radius: 6px;
+    transition: all 0.15s; font-family: inherit;
+  }
+  .engine-tab.active { background: var(--accent); color: #2a1d00; }
+  .engine-tab:hover:not(.active) { color: var(--text); }
+
+  .engine-badge {
+    display: inline-block; padding: 2px 8px; background: var(--success-soft, rgba(45,212,167,0.15));
+    color: var(--success); border-radius: 100px; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.04em; margin-left: 6px;
+  }
+
   .field { margin-bottom: 16px; }
   .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--text); }
   .field textarea, .field input[type="text"], .field select {
@@ -145,39 +161,17 @@
   .ratio-btn {
     padding: 10px 4px; background: var(--bg-soft); border: 1px solid var(--border);
     border-radius: var(--radius-sm); color: var(--text-dim); font-size: 12px;
-    font-weight: 600; cursor: pointer; transition: all 0.15s; font-family: inherit;
-    text-align: center;
+    font-weight: 600; cursor: pointer; transition: all 0.15s; font-family: inherit; text-align: center;
   }
   .ratio-btn:hover { color: var(--text); border-color: #38415a; }
   .ratio-btn.active { background: var(--accent); color: #2a1d00; border-color: var(--accent); }
 
-  .toggle-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 12px; background: var(--bg-soft); border-radius: var(--radius-sm);
-    margin-bottom: 16px;
-  }
-  .toggle-row .label { font-size: 13px; }
-  .toggle-row .label small { display: block; color: var(--text-faint); font-size: 11px; margin-top: 2px; }
-  .switch { position: relative; width: 40px; height: 22px; }
-  .switch input { opacity: 0; width: 0; height: 0; }
-  .slider {
-    position: absolute; cursor: pointer; inset: 0;
-    background: var(--border); border-radius: 100px; transition: 0.2s;
-  }
-  .slider::before {
-    content: ''; position: absolute; height: 16px; width: 16px;
-    left: 3px; top: 3px; background: white; border-radius: 50%; transition: 0.2s;
-  }
-  input:checked + .slider { background: var(--accent); }
-  input:checked + .slider::before { transform: translateX(18px); }
-
-  /* ---------- Result panel ---------- */
+  /* ---------- Result ---------- */
   .result-panel { min-height: 500px; display: flex; flex-direction: column; }
   .result-area {
     flex: 1; background: var(--bg-soft); border: 1px dashed var(--border);
     border-radius: var(--radius); display: flex; align-items: center;
-    justify-content: center; min-height: 420px; padding: 20px; position: relative;
-    overflow: hidden;
+    justify-content: center; min-height: 420px; padding: 20px; position: relative; overflow: hidden;
   }
   .result-placeholder { text-align: center; color: var(--text-faint); }
   .result-placeholder .emoji { font-size: 56px; margin-bottom: 14px; }
@@ -191,31 +185,22 @@
   }
   .loading-overlay.active { display: flex; }
   .spinner-large {
-    width: 40px; height: 40px;
-    border: 3px solid var(--border); border-top-color: var(--accent);
+    width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--accent);
     border-radius: 50%; animation: spin 0.8s linear infinite;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-text { font-size: 14px; color: var(--text-dim); }
-
-  .result-actions {
-    display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap;
-  }
+  .loading-text { font-size: 14px; color: var(--text-dim); text-align: center; padding: 0 20px; }
+  .result-actions { display: flex; gap: 10px; margin-top: 14px; flex-wrap: wrap; }
   .result-prompt {
     margin-top: 14px; padding: 12px 14px; background: var(--bg-soft);
-    border-radius: var(--radius-sm); font-size: 13px; color: var(--text-dim);
-    border-left: 3px solid var(--accent);
+    border-radius: var(--radius-sm); font-size: 13px; color: var(--text-dim); border-left: 3px solid var(--accent);
   }
 
   /* ---------- History ---------- */
   .history-section { margin-top: 32px; }
-  .history-header {
-    display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
-  }
+  .history-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
   .history-header h2 { font-size: 15px; font-weight: 600; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.04em; }
-  .history-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px;
-  }
+  .history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
   .history-item {
     background: var(--card); border: 1px solid var(--border);
     border-radius: var(--radius); overflow: hidden; cursor: pointer; transition: all 0.18s;
@@ -230,12 +215,10 @@
     position: absolute; top: 8px; right: 8px;
     width: 28px; height: 28px; border-radius: 7px;
     background: rgba(15, 17, 23, 0.85); border: none; color: var(--text-dim);
-    cursor: pointer; display: none; align-items: center; justify-content: center;
-    backdrop-filter: blur(4px);
+    cursor: pointer; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px);
   }
   .history-item:hover .delete-btn { display: flex; }
   .history-item .delete-btn:hover { background: var(--danger); color: white; }
-
   .empty-history { text-align: center; padding: 40px 20px; color: var(--text-faint); font-size: 14px; }
 
   /* ---------- Toast ---------- */
@@ -243,7 +226,7 @@
   .toast {
     background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm);
     padding: 12px 18px; font-size: 14px; box-shadow: var(--shadow);
-    animation: toastIn 0.2s ease; display: flex; align-items: center; gap: 10px; max-width: 340px;
+    animation: toastIn 0.2s ease; display: flex; align-items: center; gap: 10px; max-width: 360px;
   }
   @keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
   .toast.success { border-left: 3px solid var(--success); }
@@ -259,19 +242,35 @@
   @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
   .modal {
     background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-lg);
-    padding: 28px; max-width: 440px; width: 100%; box-shadow: var(--shadow);
-    animation: modalIn 0.2s ease;
+    padding: 28px; max-width: 440px; width: 100%; box-shadow: var(--shadow); animation: modalIn 0.2s ease;
   }
   @keyframes modalIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   .modal h3 { font-size: 19px; margin-bottom: 6px; }
   .modal p { color: var(--text-dim); font-size: 14px; margin-bottom: 20px; }
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; }
 
+  /* ---------- Info banner ---------- */
+  .info-banner {
+    background: linear-gradient(135deg, rgba(45, 212, 167, 0.10), rgba(90, 176, 255, 0.08));
+    border: 1px solid rgba(45, 212, 167, 0.3);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .info-banner .icon { color: var(--success); font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .info-banner strong { color: var(--text); }
+
   /* ---------- Responsive ---------- */
   @media (max-width: 860px) {
     .layout { grid-template-columns: 1fr; }
-    .header-inner { padding: 12px 16px; }
+    .header-inner { padding: 12px 16px; flex-wrap: wrap; }
     main { padding: 20px 16px 60px; }
+    .credits-chip { order: 4; }
     .user-chip .name { display: none; }
     .user-chip { padding: 6px; }
   }
@@ -284,17 +283,18 @@
   <div class="auth-card">
     <div class="auth-logo">🍌</div>
     <h1>Banana Studio</h1>
-    <p>Générez des images avec Google Nano Banana — gratuit, sans clé API, propulsé par Puter.js</p>
+    <p>Générez des images avec Google Nano Banana — gratuit et illimité via Pollinations, ou haute qualité via Puter</p>
     <div class="auth-features">
-      <div class="auth-feature"><span class="dot" style="background:var(--banana)"></span>Nano Banana 2.1 (Gemini) par défaut</div>
-      <div class="auth-feature"><span class="dot" style="background:var(--success)"></span>Pas de clé API, pas de carte bancaire</div>
+      <div class="auth-feature"><span class="dot" style="background:var(--banana)"></span>Mode Gratuit Illimité (Pollinations, sans clé)</div>
+      <div class="auth-feature"><span class="dot" style="background:var(--success)"></span>Mode Puter pour qualité 4K (crédits gratuits mensuels)</div>
       <div class="auth-feature"><span class="dot" style="background:var(--info)"></span>Historique sauvegardé dans votre cloud Puter</div>
-      <div class="auth-feature"><span class="dot" style="background:var(--accent)"></span>Mode test pour générer sans crédits</div>
+      <div class="auth-feature"><span class="dot" style="background:var(--accent)"></span>Aucune clé API, aucune carte bancaire</div>
     </div>
     <button class="btn btn-primary btn-block" id="sign-in-btn">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
       Se connecter avec Puter
     </button>
+    <p style="margin-top:14px;font-size:12px;color:var(--text-faint);">Vous pouvez aussi utiliser le mode gratuit sans compte.</p>
   </div>
 </div>
 
@@ -307,6 +307,10 @@
         <span>Banana Studio</span>
       </div>
       <div class="header-spacer"></div>
+      <div class="credits-chip" id="credits-chip" title="Allocation mensuelle Puter">
+        <span class="dot"></span>
+        <span id="credits-text">—</span>
+      </div>
       <div class="user-chip">
         <span class="name" id="user-name">User</span>
         <img id="user-avatar" src="" alt="avatar" onerror="this.style.display='none'" />
@@ -321,38 +325,51 @@
       <div class="panel">
         <h2>Créer une image</h2>
 
-        <div class="field">
-          <label for="prompt">Description (prompt)</label>
-          <textarea id="prompt" placeholder="Ex: Un renard astronauta flottant dans l'espace, style aquarelle, couleurs vives"></textarea>
-          <div class="field-hint">Soyez précis : sujet, style, éclairage, ambiance.</div>
+        <div class="info-banner" id="free-banner">
+          <span class="icon">✓</span>
+          <div>
+            <strong>Mode Gratuit Illimité activé.</strong>
+            Aucun crédit consommé. ~1 image / 15 sec (limite anonyme Pollinations).
+          </div>
         </div>
 
-        <div class="toggle-row">
-          <div class="label">
-            Mode test (gratuit)
-            <small>Génère une image d'exemple sans utiliser de crédits</small>
+        <div class="field">
+          <label>Moteur de génération</label>
+          <div class="engine-tabs">
+            <button class="engine-tab active" data-engine="pollinations">
+              Gratuit Illimité
+            </button>
+            <button class="engine-tab" data-engine="puter">
+              Puter (qualité)
+            </button>
           </div>
-          <label class="switch">
-            <input type="checkbox" id="test-mode" checked />
-            <span class="slider"></span>
-          </label>
+          <div class="field-hint" id="engine-hint">Pollinations.ai — anonyme, sans clé, Nano Banana inclus.</div>
+        </div>
+
+        <div class="field">
+          <label for="prompt">Description (prompt)</label>
+          <textarea id="prompt" placeholder="Ex: Un renard astronaute flottant dans l'espace, style aquarelle, couleurs vives"></textarea>
+          <div class="field-hint">Soyez précis : sujet, style, éclairage, ambiance.</div>
         </div>
 
         <div class="field">
           <label for="model">Modèle</label>
           <select id="model">
-            <option value="gemini-nano-banana-2.1">Nano Banana 2.1 (Gemini) — recommandé</option>
-            <option value="gemini-3.1-flash-image">Gemini 3.1 Flash Image</option>
-            <option value="gemini-3.1-flash-lite-image">Gemini 3.1 Flash Lite Image</option>
-            <option value="gemini-3-pro-image">Gemini 3 Pro Image</option>
-            <option value="replicate:google/nano-banana-2">Nano Banana 2 (via Replicate)</option>
-            <option value="gpt-image-2">GPT Image 2 (OpenAI)</option>
-            <option value="dola-seedream-5-0-pro-260628">Seedream 5.0 Pro (BytePlus)</option>
-            <option value="black-forest-labs/flux-schnell">FLUX Schnell (Replicate)</option>
+            <!-- Pollinations models (free) -->
+            <option value="pollinations:nanobanana">Nano Banana (gratuit, recommandé)</option>
+            <option value="pollinations:flux">FLUX Schnell (gratuit, rapide)</option>
+            <option value="pollinations:kontext">Kontext (gratuit)</option>
+            <option value="pollinations:seedream">Seedream (gratuit)</option>
+            <!-- Puter models (credits) -->
+            <option value="puter:gemini-nano-banana-2.1">[Puter] Nano Banana 2.1 (Gemini)</option>
+            <option value="puter:gemini-3.1-flash-image">[Puter] Gemini 3.1 Flash Image</option>
+            <option value="puter:gemini-3-pro-image">[Puter] Gemini 3 Pro Image</option>
+            <option value="puter:gpt-image-2">[Puter] GPT Image 2 (OpenAI)</option>
+            <option value="puter:black-forest-labs/flux-schnell">[Puter] FLUX Schnell (Replicate)</option>
           </select>
         </div>
 
-        <div class="field">
+        <div class="field" id="quality-field">
           <label for="quality">Qualité</label>
           <select id="quality">
             <option value="1K">1K (rapide)</option>
@@ -385,7 +402,7 @@
           <div class="result-placeholder" id="result-placeholder">
             <div class="emoji">🎨</div>
             <h3>Aucune image encore</h3>
-            <p>Décrivez ce que vous voulez voir, puis cliquez sur « Générer l'image ». Activez le mode test pour commencer sans crédits.</p>
+            <p>Décrivez ce que vous voulez voir, puis cliquez sur « Générer l'image ». Le mode gratuit est illimité !</p>
           </div>
           <div class="loading-overlay" id="loading-overlay">
             <div class="spinner-large"></div>
@@ -449,8 +466,10 @@
 
 <script>
 /* ============================================================
-   Banana Studio — Générateur d'images via Puter.js
-   Utilise: puter.auth, puter.kv, puter.ai.txt2img, puter.fs
+   Banana Studio — Générateur d'images
+   Deux moteurs :
+   1) Pollinations.ai — gratuit illimité, anonyme, sans clé
+   2) Puter.js — qualité supérieure, crédits mensuels gratuits
    ============================================================ */
 
 const HISTORY_KEY = 'banana_studio_history_v1';
@@ -458,13 +477,17 @@ let history = [];
 let currentImageSrc = null;
 let currentPrompt = '';
 let currentRatio = { w: 1, h: 1 };
+let currentEngine = 'pollinations';
 let confirmCallback = null;
+let isSignedIn = false;
 
 /* ---------- Auth ---------- */
 async function init() {
   try {
     if (puter.auth.isSignedIn()) {
+      isSignedIn = true;
       await loadUserAndHistory();
+      await refreshCredits();
       showApp();
     } else {
       showAuth();
@@ -474,7 +497,6 @@ async function init() {
     showAuth();
   }
 }
-
 function showAuth() {
   document.getElementById('auth-screen').style.display = 'flex';
   document.getElementById('app').classList.remove('active');
@@ -501,27 +523,137 @@ async function loadUserAndHistory() {
   await loadHistory();
 }
 
-/* ---------- History (Puter KV) ---------- */
+async function refreshCredits() {
+  const chip = document.getElementById('credits-chip');
+  const text = document.getElementById('credits-text');
+  try {
+    const usage = await puter.auth.getMonthlyUsage();
+    // Try to extract a readable number
+    let used = 0, total = 0;
+    if (usage) {
+      // Format varies; try common fields
+      if (typeof usage === 'number') { used = usage; }
+      else if (usage.usage_usd !== undefined) { used = usage.usage_usd; total = usage.allowance_usd || 0; }
+      else if (usage.used !== undefined) { used = usage.used; total = usage.total || 0; }
+    }
+    if (total > 0) {
+      const pct = Math.round((used / total) * 100);
+      text.textContent = `$${(total-used).toFixed(2)} / $${total.toFixed(2)} restant`;
+      chip.classList.toggle('low', pct > 85);
+    } else {
+      text.textContent = 'Crédits: OK';
+    }
+  } catch (e) {
+    text.textContent = 'Crédits: n/a';
+  }
+}
+
+/* ---------- History ---------- */
 async function loadHistory() {
   try {
     const raw = await puter.kv.get(HISTORY_KEY);
     history = raw ? JSON.parse(raw) : [];
   } catch (e) {
-    console.error('loadHistory failed:', e);
     history = [];
   }
   renderHistory();
 }
-
 async function saveHistory() {
   try {
     await puter.kv.set(HISTORY_KEY, JSON.stringify(history));
-  } catch (e) {
-    console.error('saveHistory failed:', e);
+  } catch (e) { console.error(e); }
+}
+
+/* ---------- Engine switching ---------- */
+function setEngine(engine) {
+  currentEngine = engine;
+  document.querySelectorAll('.engine-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.engine === engine);
+  });
+  const hint = document.getElementById('engine-hint');
+  const banner = document.getElementById('free-banner');
+  const modelSelect = document.getElementById('model');
+  const qualityField = document.getElementById('quality-field');
+
+  if (engine === 'pollinations') {
+    hint.textContent = 'Pollinations.ai — anonyme, sans clé, Nano Banana inclus. ~1 image / 15 sec.';
+    banner.style.display = 'flex';
+    banner.innerHTML = '<span class="icon">✓</span><div><strong>Mode Gratuit Illimité activé.</strong> Aucun crédit consommé. Limite : ~1 image / 15 sec (anonyme).</div>';
+    // Filter model options to pollinations
+    Array.from(modelSelect.options).forEach(opt => {
+      opt.style.display = opt.value.startsWith('pollinations:') ? '' : 'none';
+    });
+    modelSelect.value = 'pollinations:nanobanana';
+    qualityField.style.display = 'none';
+  } else {
+    hint.textContent = 'Puter.js — utilise vos crédits mensuels gratuits. Qualité jusqu\'à 4K.';
+    banner.style.display = 'flex';
+    banner.style.borderColor = 'rgba(245, 185, 66, 0.3)';
+    banner.style.background = 'linear-gradient(135deg, rgba(245, 185, 66, 0.10), rgba(217, 154, 42, 0.08))';
+    banner.innerHTML = '<span class="icon" style="color:var(--accent)">★</span><div><strong>Mode Puter activé.</strong> Utilise vos crédits gratuits mensuels. Voir le solde en haut à droite.</div>';
+    Array.from(modelSelect.options).forEach(opt => {
+      opt.style.display = opt.value.startsWith('puter:') ? '' : 'none';
+    });
+    modelSelect.value = 'puter:gemini-nano-banana-2.1';
+    qualityField.style.display = '';
   }
 }
 
-/* ---------- Image generation ---------- */
+/* ---------- Pollinations generation (FREE, UNLIMITED) ---------- */
+async function generatePollinations(prompt, modelKey, ratio) {
+  // Pollinations image URL format (free, no auth)
+  // https://image.pollinations.ai/prompt/{encoded}?width=W&height=H&model=M&nologo=true
+  const modelMap = {
+    'pollinations:nanobanana': 'nanobanana',
+    'pollinations:flux': 'flux',
+    'pollinations:kontext': 'kontext',
+    'pollinations:seedream': 'seedream'
+  };
+  const model = modelMap[modelKey] || 'flux';
+
+  // Compute pixel dimensions from ratio (~1024 base)
+  const baseSize = 1024;
+  let w, h;
+  if (ratio.w === ratio.h) { w = baseSize; h = baseSize; }
+  else if (ratio.w > ratio.h) {
+    w = baseSize;
+    h = Math.round(baseSize * ratio.h / ratio.w);
+  } else {
+    h = baseSize;
+    w = Math.round(baseSize * ratio.w / ratio.h);
+  }
+
+  const encoded = encodeURIComponent(prompt);
+  const url = `https://image.pollinations.ai/prompt/${encoded}?width=${w}&height=${h}&model=${model}&nologo=true&seed=${Math.floor(Math.random() * 1000000)}`;
+
+  // Preload the image to detect errors
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => resolve(url);
+    img.onerror = () => reject(new Error('Pollinations n\'a pas pu générer l\'image. Réessayez dans ~15 secondes (limite anonyme).'));
+    img.src = url;
+  });
+}
+
+/* ---------- Puter generation (credits) ---------- */
+async function generatePuter(prompt, modelKey, quality, ratio) {
+  const realModel = modelKey.replace('puter:', '');
+  const options = {
+    model: realModel,
+    ratio: ratio
+  };
+  if (realModel.startsWith('gemini') || realModel.includes('nano-banana')) {
+    options.quality = quality;
+  }
+  if (realModel.startsWith('replicate:') || realModel.includes('flux')) {
+    options.quality = quality;
+  }
+  const image = await puter.ai.txt2img(prompt, options);
+  return image.src || image.toString();
+}
+
+/* ---------- Main generate ---------- */
 async function generate() {
   const prompt = document.getElementById('prompt').value.trim();
   if (!prompt) {
@@ -530,47 +662,40 @@ async function generate() {
     return;
   }
 
-  const model = document.getElementById('model').value;
+  const modelKey = document.getElementById('model').value;
   const quality = document.getElementById('quality').value;
-  const testMode = document.getElementById('test-mode').checked;
+  const isPollinations = modelKey.startsWith('pollinations:');
 
   const btn = document.getElementById('generate-btn');
   btn.disabled = true;
   const overlay = document.getElementById('loading-overlay');
   const loadingText = document.getElementById('loading-text');
   overlay.classList.add('active');
-  loadingText.textContent = testMode ? 'Mode test : génération d\'une image d\'exemple...' : 'Génération en cours avec ' + model + '...';
+
+  if (isPollinations) {
+    loadingText.textContent = 'Génération gratuite via Pollinations... (peut prendre 10-20 sec)';
+  } else {
+    loadingText.textContent = 'Génération via Puter avec ' + modelKey.replace('puter:', '') + '...';
+  }
 
   // Hide previous result
   document.getElementById('result-placeholder').style.display = 'none';
   document.getElementById('result-actions').style.display = 'none';
   document.getElementById('result-prompt').style.display = 'none';
-  // Remove any previous img
   const prevImg = document.querySelector('.result-image');
   if (prevImg) prevImg.remove();
 
   try {
-    const options = {
-      model: model,
-      testMode: testMode,
-      ratio: currentRatio
-    };
-    // Add quality only for models that support it (Gemini family)
-    if (model.startsWith('gemini') || model.includes('nano-banana')) {
-      options.quality = quality;
+    let src;
+    if (isPollinations) {
+      src = await generatePollinations(prompt, modelKey, currentRatio);
+    } else {
+      src = await generatePuter(prompt, modelKey, quality, currentRatio);
     }
-    // For replicate nano-banana, use quality as resolution tier
-    if (model.startsWith('replicate:')) {
-      options.quality = quality;
-    }
-
-    const image = await puter.ai.txt2img(prompt, options);
-    const src = image.src || image.toString();
 
     currentImageSrc = src;
     currentPrompt = prompt;
 
-    // Display
     const imgEl = document.createElement('img');
     imgEl.className = 'result-image';
     imgEl.src = src;
@@ -579,68 +704,89 @@ async function generate() {
 
     document.getElementById('result-actions').style.display = 'flex';
     const promptBox = document.getElementById('result-prompt');
-    promptBox.textContent = '📝 ' + prompt;
+    promptBox.textContent = '📝 ' + prompt + ' · ' + (isPollinations ? 'Gratuit (Pollinations)' : 'Puter');
     promptBox.style.display = 'block';
 
-    // Add to history (skip in test mode to avoid polluting history with sample images)
-    if (!testMode) {
+    // Add to history (always, since both engines produce real images)
+    // For Pollinations, we save the URL (small). For Puter, the data URI may be large.
+    try {
       history.unshift({
         id: 'img_' + Date.now(),
         src: src,
         prompt: prompt,
-        model: model,
-        quality: quality,
+        model: modelKey,
         ratio: currentRatio.w + ':' + currentRatio.h,
+        engine: isPollinations ? 'pollinations' : 'puter',
         createdAt: Date.now()
       });
-      // Keep last 30
       if (history.length > 30) history = history.slice(0, 30);
       await saveHistory();
       renderHistory();
+    } catch (e) {
+      console.warn('Could not save to history (too large?):', e);
     }
 
     overlay.classList.remove('active');
-    toast(testMode ? 'Image d\'exemple générée (mode test)' : 'Image générée !', 'success');
+    toast(isPollinations ? 'Image générée gratuitement !' : 'Image générée !', 'success');
+
+    if (!isPollinations) {
+      // Refresh credits after a Puter generation
+      setTimeout(refreshCredits, 1500);
+    }
   } catch (e) {
     console.error('Generation failed:', e);
     overlay.classList.remove('active');
     document.getElementById('result-placeholder').style.display = 'block';
     let msg = 'Échec de la génération';
     if (e && e.code === 'insufficient_funds') {
-      msg = 'Crédits insuffisants. Activez le mode test ou connectez un autre compte Puter.';
+      msg = 'Crédits Puter insuffisants. Passez en mode « Gratuit Illimité » (Pollinations) pour continuer gratuitement.';
     } else if (e && e.code === 'moderation_flagged') {
       msg = 'Le prompt a été refusé par le filtre de contenu. Modifiez votre description.';
     } else if (e && e.message) {
-      msg = 'Erreur : ' + e.message;
+      msg = e.message;
     }
-    toast(msg, 'error');
+    toast(msg, 'error', 5000);
   } finally {
     btn.disabled = false;
   }
 }
 
 /* ---------- Download ---------- */
-function downloadImage() {
+async function downloadImage() {
   if (!currentImageSrc) return;
-  const a = document.createElement('a');
-  a.href = currentImageSrc;
-  const safe = currentPrompt.slice(0, 40).replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'image';
-  a.download = 'banana_' + safe + '.png';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  toast('Téléchargement démarré', 'success');
+  try {
+    // For cross-origin Pollinations URLs, fetch and convert to blob
+    const response = await fetch(currentImageSrc);
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    const safe = currentPrompt.slice(0, 40).replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'image';
+    a.download = 'banana_' + safe + '.png';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+    toast('Téléchargement démarré', 'success');
+  } catch (e) {
+    // Fallback: open in new tab
+    window.open(currentImageSrc, '_blank');
+    toast('Ouverture dans un nouvel onglet', 'info');
+  }
 }
 
 /* ---------- Save to Puter FS ---------- */
 async function saveToPuter() {
   if (!currentImageSrc) return;
+  if (!isSignedIn) {
+    toast('Connectez-vous à Puter pour sauvegarder', 'error');
+    return;
+  }
   try {
     const safe = currentPrompt.slice(0, 30).replace(/[^a-z0-9]/gi, '_').toLowerCase() || 'image';
     const filename = 'banana_' + safe + '_' + Date.now() + '.png';
     const path = '~/Pictures/' + filename;
     toast('Sauvegarde sur Puter...', 'info');
-    // Fetch the image data and write to Puter filesystem
     const response = await fetch(currentImageSrc);
     const blob = await response.blob();
     await puter.fs.write(path, blob);
@@ -651,7 +797,7 @@ async function saveToPuter() {
   }
 }
 
-/* ---------- History rendering ---------- */
+/* ---------- History ---------- */
 function renderHistory() {
   const grid = document.getElementById('history-grid');
   const empty = document.getElementById('empty-history');
@@ -669,17 +815,15 @@ function renderHistory() {
       <img src="${h.src}" alt="${escapeAttr(h.prompt)}" loading="lazy" />
       <div class="meta">
         <div class="prompt" title="${escapeAttr(h.prompt)}">${escapeHtml(h.prompt)}</div>
-        <div class="date">${new Date(h.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} · ${h.ratio || '1:1'}</div>
+        <div class="date">${new Date(h.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} · ${h.engine === 'pollinations' ? 'Gratuit' : 'Puter'}</div>
       </div>
     </div>
   `).join('');
 
-  // Wire up clicks
   grid.querySelectorAll('.history-item').forEach(item => {
     item.addEventListener('click', (e) => {
       if (e.target.closest('.delete-btn')) return;
-      const id = item.dataset.id;
-      viewHistoryItem(id);
+      viewHistoryItem(item.dataset.id);
     });
   });
   grid.querySelectorAll('.delete-btn').forEach(btn => {
@@ -689,7 +833,7 @@ function renderHistory() {
       history = history.filter(h => h.id !== id);
       await saveHistory();
       renderHistory();
-      toast('Image supprimée de l\'historique', 'info');
+      toast('Image supprimée', 'info');
     });
   });
 }
@@ -698,7 +842,7 @@ function viewHistoryItem(id) {
   const h = history.find(x => x.id === id);
   if (!h) return;
   document.getElementById('viewer-img').src = h.src;
-  document.getElementById('viewer-prompt').textContent = '📝 ' + h.prompt + ' · ' + (h.model || '') + ' · ' + (h.quality || '');
+  document.getElementById('viewer-prompt').textContent = '📝 ' + h.prompt + ' · ' + (h.model || '') + ' · ' + (h.engine === 'pollinations' ? 'Gratuit (Pollinations)' : 'Puter');
   document.getElementById('viewer-modal').classList.add('active');
 }
 
@@ -709,11 +853,9 @@ function escapeHtml(str) {
   div.textContent = str;
   return div.innerHTML;
 }
-function escapeAttr(str) {
-  return escapeHtml(str).replace(/"/g, '&quot;');
-}
+function escapeAttr(str) { return escapeHtml(str).replace(/"/g, '&quot;'); }
 
-function toast(msg, type = 'info') {
+function toast(msg, type = 'info', duration = 3200) {
   const container = document.getElementById('toast-container');
   const el = document.createElement('div');
   el.className = 'toast ' + type;
@@ -724,7 +866,7 @@ function toast(msg, type = 'info') {
     el.style.opacity = '0';
     el.style.transform = 'translateX(20px)';
     setTimeout(() => el.remove(), 300);
-  }, 3200);
+  }, duration);
 }
 
 function showConfirm(title, text, callback) {
@@ -734,14 +876,16 @@ function showConfirm(title, text, callback) {
   document.getElementById('confirm-modal').classList.add('active');
 }
 
-/* ---------- Event wiring ---------- */
+/* ---------- Events ---------- */
 document.getElementById('sign-in-btn').addEventListener('click', async () => {
   const btn = document.getElementById('sign-in-btn');
   btn.disabled = true;
   btn.textContent = 'Connexion...';
   try {
     await puter.auth.signIn();
+    isSignedIn = true;
     await loadUserAndHistory();
+    await refreshCredits();
     showApp();
     toast('Bienvenue sur Banana Studio !', 'success');
   } catch (e) {
@@ -754,13 +898,14 @@ document.getElementById('sign-in-btn').addEventListener('click', async () => {
 });
 
 document.getElementById('sign-out-btn').addEventListener('click', () => {
-  showConfirm('Déconnexion ?', 'Vous reviendrez à l\'écran de connexion. Votre historique reste sauvegardé dans votre cloud Puter.', async () => {
+  showConfirm('Déconnexion ?', 'Vous reviendrez à l\'écran de connexion. Votre historique reste sauvegardé.', async () => {
     try {
       puter.auth.signOut();
+      isSignedIn = false;
       history = [];
       showAuth();
       toast('Déconnecté', 'info');
-    } catch (e) { console.error(e); }
+    } catch (e) {}
   });
 });
 
@@ -777,17 +922,21 @@ document.querySelectorAll('.ratio-btn').forEach(btn => {
   });
 });
 
+document.querySelectorAll('.engine-tab').forEach(tab => {
+  tab.addEventListener('click', () => setEngine(tab.dataset.engine));
+});
+
 document.getElementById('download-btn').addEventListener('click', downloadImage);
 document.getElementById('save-to-puter-btn').addEventListener('click', saveToPuter);
 document.getElementById('reuse-btn').addEventListener('click', () => {
   document.getElementById('prompt').value = currentPrompt;
   document.getElementById('prompt').focus();
-  toast('Prompt rechargé dans l\'éditeur', 'info');
+  toast('Prompt rechargé', 'info');
 });
 
 document.getElementById('clear-history-btn').addEventListener('click', () => {
   if (history.length === 0) return;
-  showConfirm('Effacer tout l\'historique ?', 'Toutes les images de l\'historique seront supprimées. Cette action est irréversible.', async () => {
+  showConfirm('Effacer tout l\'historique ?', 'Toutes les images seront supprimées. Action irréversible.', async () => {
     history = [];
     await saveHistory();
     renderHistory();
@@ -818,6 +967,9 @@ document.getElementById('viewer-modal').addEventListener('click', (e) => {
     document.getElementById('viewer-modal').classList.remove('active');
   }
 });
+
+// Initialize engine UI
+setEngine('pollinations');
 
 // Boot
 init();
